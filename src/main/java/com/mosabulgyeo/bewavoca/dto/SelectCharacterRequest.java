@@ -1,5 +1,6 @@
 package com.mosabulgyeo.bewavoca.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +18,6 @@ public class SelectCharacterRequest {
 	private String deviceId;
 
 	@NotNull(message = "Character ID is required.")
+	@Min(value = 1, message = "Character ID must be a positive number.")
 	private Long characterId;
 }
