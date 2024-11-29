@@ -1,5 +1,7 @@
 package com.mosabulgyeo.bewavoca.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -41,28 +43,33 @@ public class QuizResponse {
 		/**
 		 * OX 퀴즈 고유 ID.
 		 */
+		@NotNull(message = "Quiz ID is required.")
 		private Long id;
 
 		/**
 		 * OX 퀴즈 질문.
 		 * 예: "[바나나]는 제주어로 A다"
 		 */
+		@NotBlank(message = "Question is required.")
 		private String question;
 
 		/**
 		 * OX 퀴즈의 정답 (true: O, false: X).
 		 */
+		@NotNull(message = "Correct answer is required.")
 		private boolean correctAnswer;
 
 		/**
 		 * OX 퀴즈의 정답 설명.
 		 * 예: "바나나는 제주어로 A입니다."
 		 */
+		@NotBlank(message = "Explanation is required.")
 		private String explanation;
 
 		/**
 		 * OX 퀴즈의 음성 파일 경로.
 		 */
+		@NotBlank(message = "Voice file path is required.")
 		private String voice;
 	}
 
@@ -78,12 +85,14 @@ public class QuizResponse {
 		 * 표준어 단어.
 		 * 예: "바나나"
 		 */
+		@NotBlank(message = "Standard word is required.")
 		private String standard;
 
 		/**
 		 * 대응되는 제주어 단어.
 		 * 예: "A"
 		 */
+		@NotBlank(message = "Jeju word is required.")
 		private String jeju;
 	}
 
@@ -99,23 +108,27 @@ public class QuizResponse {
 		 * 표준어 단어.
 		 * 예: "바나나"
 		 */
+		@NotBlank(message = "Standard word is required.")
 		private String standard;
 
 		/**
 		 * 정답 제주어 단어.
 		 * 예: "A"
 		 */
+		@NotBlank(message = "Jeju word is required.")
 		private String jeju;
 
 		/**
 		 * 정답 설명.
 		 * 예: "바나나는 제주어로 A입니다."
 		 */
+		@NotBlank(message = "Explanation is required.")
 		private String explanation;
 
 		/**
 		 * 음성 파일 경로.
 		 */
+		@NotBlank(message = "Voice file path is required.")
 		private String voice;
 	}
 }

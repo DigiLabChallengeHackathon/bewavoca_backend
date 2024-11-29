@@ -1,6 +1,7 @@
 package com.mosabulgyeo.bewavoca.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,10 +19,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignupRequest {
+
 	@NotBlank(message = "Device ID is required.")
+	@Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Device ID must contain only letters and numbers.")
 	private String deviceId;
 
 	@NotBlank(message = "Nickname is required.")
 	@Size(max = 8, message = "Nickname cannot exceed 8 characters.")
+	@Pattern(regexp = "^[a-zA-Z가-힣0-9]*$", message = "Nickname can only contain letters, numbers, and Korean characters.")
 	private String nickname;
 }

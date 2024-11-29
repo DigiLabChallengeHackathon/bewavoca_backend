@@ -23,16 +23,16 @@ public class Quiz {
 	private Region region;
 
 	@Column(nullable = false)
-	private String stageType; // OX, MATCH, CHOICE
+	private String stageType;
 
 	@Column(nullable = false)
 	private String question;
 
 	@Column(nullable = true)
-	private String standard; // 표준어
+	private String standard;
 
 	@Column(nullable = true)
-	private String jeju; // 제주어
+	private String jeju;
 
 	@Column(nullable = true)
 	private String explanation;
@@ -41,7 +41,7 @@ public class Quiz {
 	private String voice;
 
 	@Column(nullable = false)
-	private boolean correctAnswer; // OX 퀴즈에서만 사용
+	private boolean correctAnswer;
 
 	public Quiz(Region region, String stageType, String question, String standard, String jeju,
 		String explanation, String voice, boolean correctAnswer) {

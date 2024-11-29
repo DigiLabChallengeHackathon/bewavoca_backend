@@ -1,6 +1,7 @@
 package com.mosabulgyeo.bewavoca.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class UpdateNicknameRequest {
 	 * 사용자를 식별하기 위한 값으로 필수 입력
 	 */
 	@NotBlank(message = "Device ID is required.")
+	@Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Device ID must contain only letters and numbers.")
 	private String deviceId;
 
 	/**
@@ -28,5 +30,6 @@ public class UpdateNicknameRequest {
 	 */
 	@NotBlank(message = "New nickname is required.")
 	@Size(max = 8, message = "Nickname cannot exceed 8 characters.")
+	@Pattern(regexp = "^[a-zA-Z가-힣0-9]*$", message = "Nickname can only contain letters, numbers, and Korean characters.")
 	private String newNickname;
 }

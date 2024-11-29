@@ -6,12 +6,15 @@ import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.mosabulgyeo.bewavoca.dto.ApiResponse;
 import com.mosabulgyeo.bewavoca.dto.DeviceRequest;
 import com.mosabulgyeo.bewavoca.dto.SignupRequest;
 import com.mosabulgyeo.bewavoca.dto.UpdateNicknameRequest;
 import com.mosabulgyeo.bewavoca.dto.UserResponse;
 import com.mosabulgyeo.bewavoca.entity.User;
 import com.mosabulgyeo.bewavoca.service.AuthService;
+
+import jakarta.validation.Valid;
 
 /**
  * 사용자 인증 REST 컨트롤러
@@ -41,18 +44,22 @@ public class AuthController {
 	 * @return 사용자 정보 또는 상태 메시지를 포함한 ResponseEntity
 	 */
 	@PostMapping("/check-device")
-	public ResponseEntity<?> checkDevice(@RequestBody DeviceRequest request) {
+	public ResponseEntity<ApiResponse<UserResponse>> checkDevice(@RequestBody DeviceRequest request) {
 		Optional<User> user = authService.findUserByDeviceId(request.getDeviceId());
 
 		if (user.isPresent()) {
 			User existingUser = user.get();
-			return ResponseEntity.ok(new UserResponse(
-				existingUser.getId(),
-				existingUser.getNickname()
+			return ResponseEntity.ok(new ApiResponse<>(
+				"success",
+				"User exists",
+				new UserResponse(user.get().getId(), user.get().getNickname())
 			));
 		}
-
-		return ResponseEntity.ok(Map.of("status", "not_exists", "message", "User does not exist."));
+		return ResponseEntity.ok(new ApiResponse<>(
+			"error",
+			"User does not exist",
+			null
+		));
 	}
 
 	/**
@@ -65,11 +72,12 @@ public class AuthController {
 	 * @return 등록된 사용자 정보를 포함한 ResponseEntity
 	 */
 	@PostMapping("/signup")
-	public ResponseEntity<UserResponse> signup(@RequestBody SignupRequest request) {
+	public ResponseEntity<ApiResponse<UserResponse>> signup(@RequestBody @Valid SignupRequest request) {
 		User user = authService.registerUser(request.getDeviceId(), request.getNickname());
-		return ResponseEntity.ok(new UserResponse(
-			user.getId(),
-			user.getNickname()
+		return ResponseEntity.ok(new ApiResponse<>(
+			"success",
+			"User registered successfully",
+			new UserResponse(user.getId(), user.getNickname())
 		));
 	}
 
@@ -83,9 +91,13 @@ public class AuthController {
 	 * @return 사용자 정보를 포함한 ResponseEntity
 	 */
 	@GetMapping("/user/{deviceId}")
-	public ResponseEntity<UserResponse> getUserInfo(@PathVariable String deviceId) {
+	public ResponseEntity<ApiResponse<UserResponse>> getUserInfo(@PathVariable String deviceId) {
 		User user = authService.getUserByDeviceId(deviceId);
-		return ResponseEntity.ok(new UserResponse(user.getId(), user.getNickname()));
+		return ResponseEntity.ok(new ApiResponse<>(
+			"success",
+			"User information retrieved",
+			new UserResponse(user.getId(), user.getNickname())
+		));
 	}
 
 	/**
