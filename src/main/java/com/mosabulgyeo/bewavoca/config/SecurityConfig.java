@@ -38,10 +38,10 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			.csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
-			.cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 적용
+			.csrf(AbstractHttpConfigurer::disable)
+			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.authorizeHttpRequests(authorize -> authorize
-				.requestMatchers("/**").permitAll() // 모든 요청 허용
+				.requestMatchers("/**").permitAll()
 			);
 		return http.build();
 	}
@@ -59,13 +59,13 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowCredentials(true); // 인증 정보 포함 허용
-		configuration.addAllowedOriginPattern("*"); // 모든 도메인 허용
-		configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
-		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용되는 HTTP 메서드
-		configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie")); // 노출 헤더 설정
+		configuration.setAllowCredentials(true);
+		configuration.addAllowedOriginPattern("*");
+		configuration.setAllowedHeaders(List.of("*"));
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration); // 모든 경로에 적용
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 }

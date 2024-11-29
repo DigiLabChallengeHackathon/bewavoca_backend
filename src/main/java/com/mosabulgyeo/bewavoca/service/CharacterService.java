@@ -43,14 +43,14 @@ public class CharacterService {
 
 		List<Character> allCharacters = characterRepository.findAll();
 		return allCharacters.stream()
-			.filter(character -> user.hasClearedRegion(character.getRegion().getId())) // Check if the region is cleared.
+			.filter(character -> user.hasClearedRegion(character.getRegion().getId()))
 			.map(character -> new CharacterResponse(
 				character.getId(),
 				character.getName(),
 				character.getDescription(),
 				character.getDialogue(),
 				character.getAppearances(),
-				character.getRegion().getName() // Return the region name instead of stage info.
+				character.getRegion().getName()
 			))
 			.collect(Collectors.toList());
 	}

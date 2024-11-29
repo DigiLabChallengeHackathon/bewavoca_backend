@@ -1,5 +1,6 @@
 package com.mosabulgyeo.bewavoca.controller;
 
+import com.mosabulgyeo.bewavoca.dto.CompleteQuizRequest;
 import com.mosabulgyeo.bewavoca.dto.QuizResponse;
 import com.mosabulgyeo.bewavoca.service.QuizService;
 
@@ -34,5 +35,17 @@ public class QuizController {
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
 		}
+	}
+
+	/**
+	 * 퀴즈 완료 처리
+	 *
+	 * @param request 퀴즈 완료 요청 데이터
+	 * @return 완료 메시지
+	 */
+	@PostMapping("/complete")
+	public ResponseEntity<String> completeQuiz(@RequestBody CompleteQuizRequest request) {
+		String message = quizService.completeQuiz(request);
+		return ResponseEntity.ok(message);
 	}
 }
