@@ -13,6 +13,4 @@ import org.springframework.data.jpa.repository.Query;
  * Character 엔티티와 매핑된 테이블에 접근하여 CRUD 작업을 수행.
  */
 public interface CharacterRepository extends JpaRepository<Character, Long> {
-	@Query("SELECT c FROM Character c WHERE c.region.id IN :clearedRegionIds")
-	List<Character> findUnlockedCharacters(List<Long> clearedRegionIds);
 }

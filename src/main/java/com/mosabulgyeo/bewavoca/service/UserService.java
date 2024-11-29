@@ -1,11 +1,9 @@
 package com.mosabulgyeo.bewavoca.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.mosabulgyeo.bewavoca.entity.Region;
 import com.mosabulgyeo.bewavoca.entity.User;
 import com.mosabulgyeo.bewavoca.repository.UserRepository;
 
