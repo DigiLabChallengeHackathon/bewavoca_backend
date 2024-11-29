@@ -28,24 +28,16 @@ public class QuizController {
 	 * @return The appropriate quiz response.
 	 */
 	@GetMapping
-	public ResponseEntity<ApiResponse<QuizResponse>> getQuiz(
-		@RequestParam int level,
-		@RequestParam String type
-	) {
-		try {
-			QuizResponse quizResponse = quizService.getQuizByTypeAndLevel(type, level);
-			return ResponseEntity.ok(new ApiResponse<>(
-				"success",
-				"Quiz retrieved successfully",
-				quizResponse
-			));
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(new ApiResponse<>(
-				"error",
-				e.getMessage(),
-				null
-			));
+	public ResponseEntity<ApiResponse<QuizResponse>> getQuiz(@RequestParam int level, @RequestParam String type) {
+		if (level < 1) {
+			throw new IllegalArgumentException("Level must be greater than 0.");
 		}
+		QuizResponse quizResponse = quizService.getQuizByTypeAndLevel(type, level);
+		return ResponseEntity.ok(new ApiResponse<>(
+			"success",
+			"Quiz retrieved successfully",
+			quizResponse
+		));
 	}
 
 	/**

@@ -43,13 +43,15 @@ public class CharacterController {
 	@GetMapping("/{deviceId}")
 	public ResponseEntity<ApiResponse<List<CharacterResponse>>> getAvailableCharacters(@PathVariable String deviceId) {
 		List<CharacterResponse> characters = characterService.getAvailableCharacters(deviceId);
+		if (characters.isEmpty()) {
+			throw new IllegalArgumentException("No available characters for this device.");
+		}
 		return ResponseEntity.ok(new ApiResponse<>(
 			"success",
 			"Available characters retrieved",
 			characters
 		));
 	}
-
 
 	/**
 	 * 캐릭터 선택
@@ -79,6 +81,9 @@ public class CharacterController {
 	@GetMapping("/selected/{deviceId}")
 	public ResponseEntity<ApiResponse<CharacterResponse>> getSelectedCharacter(@PathVariable String deviceId) {
 		CharacterResponse selectedCharacter = characterService.getSelectedCharacter(deviceId);
+		if (selectedCharacter == null) {
+			throw new IllegalArgumentException("No selected character found for this device.");
+		}
 		return ResponseEntity.ok(new ApiResponse<>(
 			"success",
 			"Selected character retrieved",
