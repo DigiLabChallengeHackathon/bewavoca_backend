@@ -1,11 +1,14 @@
 package com.mosabulgyeo.bewavoca.controller;
 
+import com.mosabulgyeo.bewavoca.dto.ApiResponse;
 import com.mosabulgyeo.bewavoca.dto.CompleteQuizRequest;
 import com.mosabulgyeo.bewavoca.dto.QuizResponse;
 import com.mosabulgyeo.bewavoca.service.QuizService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/quiz")
@@ -25,15 +28,23 @@ public class QuizController {
 	 * @return The appropriate quiz response.
 	 */
 	@GetMapping
-	public ResponseEntity<?> getQuiz(
+	public ResponseEntity<ApiResponse<QuizResponse>> getQuiz(
 		@RequestParam int level,
 		@RequestParam String type
 	) {
 		try {
 			QuizResponse quizResponse = quizService.getQuizByTypeAndLevel(type, level);
-			return ResponseEntity.ok(quizResponse);
+			return ResponseEntity.ok(new ApiResponse<>(
+				"success",
+				"Quiz retrieved successfully",
+				quizResponse
+			));
 		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+			return ResponseEntity.badRequest().body(new ApiResponse<>(
+				"error",
+				e.getMessage(),
+				null
+			));
 		}
 	}
 
@@ -44,8 +55,12 @@ public class QuizController {
 	 * @return 완료 메시지
 	 */
 	@PostMapping("/complete")
-	public ResponseEntity<String> completeQuiz(@RequestBody CompleteQuizRequest request) {
+	public ResponseEntity<ApiResponse<String>> completeQuiz(@RequestBody @Valid CompleteQuizRequest request) {
 		String message = quizService.completeQuiz(request);
-		return ResponseEntity.ok(message);
+		return ResponseEntity.ok(new ApiResponse<>(
+			"success",
+			message,
+			null
+		));
 	}
 }

@@ -1,5 +1,6 @@
 package com.mosabulgyeo.bewavoca.controller;
 
+import com.mosabulgyeo.bewavoca.dto.ApiResponse;
 import com.mosabulgyeo.bewavoca.dto.CharacterResponse;
 import com.mosabulgyeo.bewavoca.dto.SelectCharacterRequest;
 import com.mosabulgyeo.bewavoca.service.CharacterService;
@@ -7,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import jakarta.validation.Valid;
 
 /**
  * CharacterController
@@ -38,9 +41,15 @@ public class CharacterController {
 	 * @return 사용 가능한 캐릭터 목록
 	 */
 	@GetMapping("/{deviceId}")
-	public ResponseEntity<List<CharacterResponse>> getAvailableCharacters(@PathVariable String deviceId) {
-		return ResponseEntity.ok(characterService.getAvailableCharacters(deviceId));
+	public ResponseEntity<ApiResponse<List<CharacterResponse>>> getAvailableCharacters(@PathVariable String deviceId) {
+		List<CharacterResponse> characters = characterService.getAvailableCharacters(deviceId);
+		return ResponseEntity.ok(new ApiResponse<>(
+			"success",
+			"Available characters retrieved",
+			characters
+		));
 	}
+
 
 	/**
 	 * 캐릭터 선택
@@ -51,9 +60,13 @@ public class CharacterController {
 	 * @return HTTP 200 OK 상태
 	 */
 	@PostMapping("/select")
-	public ResponseEntity<Void> selectCharacter(@RequestBody SelectCharacterRequest request) {
+	public ResponseEntity<ApiResponse<Void>> selectCharacter(@RequestBody @Valid SelectCharacterRequest request) {
 		characterService.selectCharacter(request);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(new ApiResponse<>(
+			"success",
+			"Character selected successfully",
+			null
+		));
 	}
 
 	/** 선택된 캐릭터 정보 조회
@@ -64,7 +77,12 @@ public class CharacterController {
 	 * @return 선택된 캐릭터의 정보
 	 */
 	@GetMapping("/selected/{deviceId}")
-	public ResponseEntity<CharacterResponse> getSelectedCharacter(@PathVariable String deviceId) {
-		return ResponseEntity.ok(characterService.getSelectedCharacter(deviceId));
+	public ResponseEntity<ApiResponse<CharacterResponse>> getSelectedCharacter(@PathVariable String deviceId) {
+		CharacterResponse selectedCharacter = characterService.getSelectedCharacter(deviceId);
+		return ResponseEntity.ok(new ApiResponse<>(
+			"success",
+			"Selected character retrieved",
+			selectedCharacter
+		));
 	}
 }
