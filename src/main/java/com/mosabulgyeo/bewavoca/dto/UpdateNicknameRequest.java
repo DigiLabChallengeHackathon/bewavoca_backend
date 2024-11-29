@@ -21,7 +21,7 @@ public class UpdateNicknameRequest {
 	 * 사용자를 식별하기 위한 값으로 필수 입력
 	 */
 	@NotBlank(message = "Device ID is required.")
-	@Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Device ID must contain only letters and numbers.")
+	@Pattern(regexp = "^[a-zA-Z0-9-]+$", message = "Device ID must contain only letters, numbers, and dashes.")
 	private String deviceId;
 
 	/**

@@ -21,7 +21,7 @@ import lombok.Setter;
 public class SignupRequest {
 
 	@NotBlank(message = "Device ID is required.")
-	@Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Device ID must contain only letters and numbers.")
+	@Pattern(regexp = "^[a-zA-Z0-9-]+$", message = "Device ID must contain only letters, numbers, and dashes.")
 	private String deviceId;
 
 	@NotBlank(message = "Nickname is required.")
