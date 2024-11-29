@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ApiResponse<T> {
-	private String status;  // "success" or "error"
-	private String message; // 응답 메시지
-	private T data;         // 응답 데이터
+	private String status;
+	private String message;
+	private T data;
 }
