@@ -19,7 +19,7 @@ public class MiniStage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(name = "mini_stage_order", nullable = false)
 	private int order; // 미니 스테이지의 순서 (1, 2, 3 등)
 
 	@ManyToOne(fetch = FetchType.LAZY)
