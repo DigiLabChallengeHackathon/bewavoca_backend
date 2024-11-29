@@ -1,5 +1,8 @@
 package com.mosabulgyeo.bewavoca.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,6 +40,67 @@ public class User {
 	 */
 	@Column(nullable = false, length = 8)
 	private String nickname; // 닉네임 (8자 제한)
+
+	/**
+	 * 선택된 캐릭터 ID
+	 * 사용자가 선택한 캐릭터를 나타냅니다.
+	 * 선택되지 않은 경우 null.
+	 */
+	@Column(nullable = true)
+	private Long selectedCharacterId;
+
+	@ManyToMany
+	@JoinTable(
+		name = "user_cleared_mini_stages",
+		joinColumns = @JoinColumn(name = "user_id"),
+		inverseJoinColumns = @JoinColumn(name = "mini_stage_id")
+	)
+	private Set<MiniStage> clearedMiniStages = new HashSet<>();
+
+	/**
+	 * 특정 미니 스테이지 완료 여부 확인
+	 *
+	 * @param miniStageId 확인할 미니 스테이지 ID
+	 * @return 완료 여부
+	 */
+	public boolean hasClearedMiniStage(Long miniStageId) {
+		return clearedMiniStages.stream().anyMatch(miniStage -> miniStage.getId().equals(miniStageId));
+	}
+
+	/**
+	 * 특정 미니 스테이지를 완료 처리
+	 *
+	 * @param miniStage 완료한 미니 스테이지
+	 */
+	public void clearMiniStage(MiniStage miniStage) {
+		this.clearedMiniStages.add(miniStage);
+	}
+
+	/**
+	 * 특정 Stage의 모든 미니 스테이지를 완료했는지 확인
+	 *
+	 * @param stage 완료 확인할 Stage
+	 * @return 완료 여부
+	 */
+	public boolean hasClearedStage(Stage stage) {
+		return stage.getMiniStages().stream()
+			.allMatch(miniStage -> hasClearedMiniStage(miniStage.getId()));
+	}
+
+	/**
+	 * 선택된 캐릭터 ID를 업데이트하는 메서드
+	 *
+	 * 주어진 캐릭터 ID를 사용하여 현재 사용자가 선택한 캐릭터를 설정합니다.
+	 *
+	 * @param characterId 선택할 캐릭터 ID
+	 * @throws IllegalArgumentException 유효하지 않은 캐릭터 ID일 경우 예외 발생
+	 */
+	public void setSelectedCharacterId(Long characterId) {
+		if (characterId == null || characterId <= 0) {
+			throw new IllegalArgumentException("Invalid character ID");
+		}
+		this.selectedCharacterId = characterId;
+	}
 
 	/**
 	 * 사용자 생성자
