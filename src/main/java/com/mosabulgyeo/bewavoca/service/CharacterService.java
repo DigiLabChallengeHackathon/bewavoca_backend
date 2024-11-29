@@ -2,7 +2,6 @@ package com.mosabulgyeo.bewavoca.service;
 
 import com.mosabulgyeo.bewavoca.dto.CharacterResponse;
 import com.mosabulgyeo.bewavoca.dto.SelectCharacterRequest;
-import com.mosabulgyeo.bewavoca.dto.StageResponse;
 import com.mosabulgyeo.bewavoca.entity.Character;
 import com.mosabulgyeo.bewavoca.entity.User;
 import com.mosabulgyeo.bewavoca.repository.CharacterRepository;
@@ -44,18 +43,14 @@ public class CharacterService {
 
 		List<Character> allCharacters = characterRepository.findAll();
 		return allCharacters.stream()
+			.filter(character -> user.hasClearedRegion(character.getRegion().getId())) // Check if the region is cleared.
 			.map(character -> new CharacterResponse(
 				character.getId(),
 				character.getName(),
 				character.getDescription(),
 				character.getDialogue(),
 				character.getAppearances(),
-				new StageResponse(
-					character.getStage().getId(),
-					character.getStage().getName(),
-					character.getStage().getDescription(),
-					character.getStage().getLevel()
-				)
+				character.getRegion().getName() // Return the region name instead of stage info.
 			))
 			.collect(Collectors.toList());
 	}
@@ -76,8 +71,8 @@ public class CharacterService {
 			.orElseThrow(() -> new IllegalArgumentException("Character not found"));
 
 		// Stage 전체 완료 여부 확인
-		if (!user.hasClearedStage(character.getStage())) {
-			throw new IllegalArgumentException("Character's stage not cleared yet");
+		if (!user.hasClearedRegion(character.getId())) {
+			throw new IllegalArgumentException("Character's region is not cleared yet.");
 		}
 
 		user.setSelectedCharacterId(character.getId());
@@ -109,12 +104,7 @@ public class CharacterService {
 			character.getDescription(),
 			character.getDialogue(),
 			character.getAppearances(),
-			new StageResponse(
-				character.getStage().getId(),
-				character.getStage().getName(),
-				character.getStage().getDescription(),
-				character.getStage().getLevel()
-			)
+			character.getRegion().getName()
 		);
 	}
 }
