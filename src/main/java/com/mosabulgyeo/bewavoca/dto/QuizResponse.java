@@ -41,7 +41,7 @@ public class QuizResponse {
 		/**
 		 * OX 퀴즈 고유 ID.
 		 */
-		private int id;
+		private Long id;
 
 		/**
 		 * OX 퀴즈 질문.
