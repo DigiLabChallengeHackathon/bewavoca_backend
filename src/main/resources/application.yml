@@ -1,0 +1,16 @@
+spring:
+  # ?? ?? ?? ??
+  logging:
+    level:
+      root: INFO
+      org.springframework.web: INFO
+      org.hibernate.SQL: DEBUG
+
+# ?? ?? ??
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
