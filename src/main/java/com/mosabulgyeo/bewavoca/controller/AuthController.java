@@ -44,22 +44,16 @@ public class AuthController {
 	 * @return 사용자 정보 또는 상태 메시지를 포함한 ResponseEntity
 	 */
 	@PostMapping("/check-device")
-	public ResponseEntity<ApiResponse<UserResponse>> checkDevice(@RequestBody DeviceRequest request) {
+	public ResponseEntity<ApiResponse<UserResponse>> checkDevice(@RequestBody @Valid DeviceRequest request) {
 		Optional<User> user = authService.findUserByDeviceId(request.getDeviceId());
-
 		if (user.isPresent()) {
-			User existingUser = user.get();
 			return ResponseEntity.ok(new ApiResponse<>(
 				"success",
 				"User exists",
 				new UserResponse(user.get().getId(), user.get().getNickname())
 			));
 		}
-		return ResponseEntity.ok(new ApiResponse<>(
-			"error",
-			"User does not exist",
-			null
-		));
+		throw new IllegalArgumentException("User does not exist.");
 	}
 
 	/**
@@ -93,6 +87,9 @@ public class AuthController {
 	@GetMapping("/user/{deviceId}")
 	public ResponseEntity<ApiResponse<UserResponse>> getUserInfo(@PathVariable String deviceId) {
 		User user = authService.getUserByDeviceId(deviceId);
+		if (user == null) {
+			throw new IllegalArgumentException("User not found.");
+		}
 		return ResponseEntity.ok(new ApiResponse<>(
 			"success",
 			"User information retrieved",

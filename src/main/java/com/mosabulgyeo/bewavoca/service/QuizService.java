@@ -82,7 +82,8 @@ public class QuizService {
 			.orElseThrow(() -> new IllegalArgumentException("User not found"));
 
 		if (request.getIsPassed()) {
-			user.clearStage(request.getStageType());
+			// StageType 열거형을 문자열로 변환
+			user.clearStage(request.getStageType().name());
 			if (user.hasClearedRegion(request.getRegionId())) {
 				user.completeRegion(request.getRegionId());
 				return "Region completed successfully!";
