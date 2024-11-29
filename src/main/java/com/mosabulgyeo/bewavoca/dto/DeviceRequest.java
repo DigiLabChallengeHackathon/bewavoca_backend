@@ -25,6 +25,6 @@ public class DeviceRequest {
 	 */
 	@NotBlank(message = "Device ID is required.")
 	@Size(min = 5, max = 50, message = "Device ID must be between 5 and 50 characters.")
-	@Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Device ID must contain only letters and numbers.")
+	@Pattern(regexp = "^[a-zA-Z0-9-]+$", message = "Device ID must contain only letters, numbers, and dashes.")
 	private String deviceId;
 }
