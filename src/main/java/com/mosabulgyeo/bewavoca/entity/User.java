@@ -49,42 +49,47 @@ public class User {
 	@Column(nullable = true)
 	private Long selectedCharacterId;
 
-	@ManyToMany
-	@JoinTable(
-		name = "user_cleared_mini_stages",
-		joinColumns = @JoinColumn(name = "user_id"),
-		inverseJoinColumns = @JoinColumn(name = "mini_stage_id")
-	)
-	private Set<MiniStage> clearedMiniStages = new HashSet<>();
+	@ElementCollection
+	@CollectionTable(name = "user_cleared_stages", joinColumns = @JoinColumn(name = "user_id"))
+	@Column(name = "stage_type")
+	private Set<String> clearedStageTypes = new HashSet<>();
 
 	/**
-	 * 특정 미니 스테이지 완료 여부 확인
-	 *
-	 * @param miniStageId 확인할 미니 스테이지 ID
-	 * @return 완료 여부
+	 * 클리어한 스테이지 목록
 	 */
-	public boolean hasClearedMiniStage(Long miniStageId) {
-		return clearedMiniStages.stream().anyMatch(miniStage -> miniStage.getId().equals(miniStageId));
+	@ElementCollection
+	@CollectionTable(name = "user_completed_regions", joinColumns = @JoinColumn(name = "user_id"))
+	@Column(name = "region_id")
+	private Set<Long> completedRegions = new HashSet<>();
+
+	/**
+	 * 특정 미니 스테이지 타입 클리어 여부 확인
+	 *
+	 * @param stageType 확인할 미니 스테이지 타입f
+	 * @return 클리어 여부
+	 */
+	public boolean hasClearedStage(String stageType) {
+		return clearedStageTypes.contains(stageType);
 	}
 
 	/**
-	 * 특정 미니 스테이지를 완료 처리
+	 * 특정 미니 스테이지 타입을 클리어 처리
 	 *
-	 * @param miniStage 완료한 미니 스테이지
+	 * @param stageType 클리어한 미니 스테이지 타입
 	 */
-	public void clearMiniStage(MiniStage miniStage) {
-		this.clearedMiniStages.add(miniStage);
+	public void clearStage(String stageType) {
+		this.clearedStageTypes.add(stageType);
 	}
 
 	/**
 	 * 특정 Stage의 모든 미니 스테이지를 완료했는지 확인
-	 *
-	 * @param stage 완료 확인할 Stage
-	 * @return 완료 여부
 	 */
-	public boolean hasClearedStage(Stage stage) {
-		return stage.getMiniStages().stream()
-			.allMatch(miniStage -> hasClearedMiniStage(miniStage.getId()));
+	public boolean hasClearedRegion(Long regionId) {
+		return completedRegions.contains(regionId);
+	}
+
+	public void completeRegion(Long regionId) {
+		this.completedRegions.add(regionId);
 	}
 
 	/**
