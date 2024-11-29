@@ -41,8 +41,7 @@ public class CharacterService {
 		User user = userRepository.findByDeviceId(deviceId)
 			.orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-		List<Character> allCharacters = characterRepository.findAll();
-		return allCharacters.stream()
+		return characterRepository.findAll().stream()
 			.filter(character -> user.hasClearedRegion(character.getRegion().getId()))
 			.map(character -> new CharacterResponse(
 				character.getId(),
@@ -70,9 +69,8 @@ public class CharacterService {
 		Character character = characterRepository.findById(request.getCharacterId())
 			.orElseThrow(() -> new IllegalArgumentException("Character not found"));
 
-		// Stage 전체 완료 여부 확인
-		if (!user.hasClearedRegion(character.getId())) {
-			throw new IllegalArgumentException("Character's region is not cleared yet.");
+		if (!user.hasClearedRegion(character.getRegion().getId())) {
+			throw new IllegalArgumentException("Region not cleared for the selected character.");
 		}
 
 		user.setSelectedCharacterId(character.getId());
@@ -85,14 +83,13 @@ public class CharacterService {
 	 * @param deviceId 사용자 디바이스 ID
 	 * @return 선택된 캐릭터의 정보
 	 */
-	@Transactional
 	public CharacterResponse getSelectedCharacter(String deviceId) {
 		User user = userRepository.findByDeviceId(deviceId)
 			.orElseThrow(() -> new IllegalArgumentException("User not found"));
 
 		Long selectedCharacterId = user.getSelectedCharacterId();
 		if (selectedCharacterId == null) {
-			throw new IllegalArgumentException("No character selected for this user");
+			throw new IllegalArgumentException("No character selected for this user.");
 		}
 
 		Character character = characterRepository.findById(selectedCharacterId)
