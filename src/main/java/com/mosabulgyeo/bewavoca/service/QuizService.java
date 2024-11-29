@@ -4,6 +4,7 @@ import com.mosabulgyeo.bewavoca.dto.CompleteQuizRequest;
 import com.mosabulgyeo.bewavoca.dto.QuizResponse;
 import com.mosabulgyeo.bewavoca.entity.Region;
 import com.mosabulgyeo.bewavoca.entity.User;
+import com.mosabulgyeo.bewavoca.mapper.QuizResponseMapper;
 import com.mosabulgyeo.bewavoca.repository.RegionRepository;
 import com.mosabulgyeo.bewavoca.repository.QuizRepository;
 import com.mosabulgyeo.bewavoca.repository.UserRepository;
@@ -22,10 +23,13 @@ public class QuizService {
 	private final RegionRepository regionRepository;
 	private final QuizRepository quizRepository;
 
-	public QuizService(UserRepository userRepository, RegionRepository regionRepository, QuizRepository quizRepository) {
+	private final QuizResponseMapper quizResponseMapper;
+
+	public QuizService(UserRepository userRepository, RegionRepository regionRepository, QuizRepository quizRepository, QuizResponseMapper quizResponseMapper) {
 		this.userRepository = userRepository;
 		this.regionRepository = regionRepository;
 		this.quizRepository = quizRepository;
+		this.quizResponseMapper = quizResponseMapper;
 	}
 
 	/**
@@ -35,37 +39,12 @@ public class QuizService {
 	 * @return QuizResponse
 	 */
 	public QuizResponse getQuizByTypeAndLevel(String type, int level) {
-		if (!type.equals("ox") && !type.equals("match") && !type.equals("choice")) {
-			throw new IllegalArgumentException("Invalid quiz type. Supported types: ox, match, choice.");
-		}
-
 		Region region = regionRepository.findByLevel(level)
-			.orElseThrow(() -> new IllegalArgumentException("Region with level " + level + " not found."));
+			.orElseThrow(() -> new IllegalArgumentException("Region not found"));
 
 		List<?> quizzes = quizRepository.findByRegionIdAndStageType(region.getId(), type).stream()
-			.map(quiz -> {
-				if (type.equals("ox")) {
-					return new QuizResponse.OXQuiz(
-						quiz.getId(),
-						quiz.getQuestion(),
-						quiz.isCorrectAnswer(),
-						quiz.getExplanation(),
-						quiz.getVoice()
-					);
-				} else if (type.equals("match")) {
-					return new QuizResponse.MatchQuiz(
-						quiz.getStandard(),
-						quiz.getJeju()
-					);
-				} else {
-					return new QuizResponse.ChoiceQuiz(
-						quiz.getStandard(),
-						quiz.getJeju(),
-						quiz.getExplanation(),
-						quiz.getVoice()
-					);
-				}
-			}).collect(Collectors.toList());
+			.map(quiz -> quizResponseMapper.mapQuizToResponse(type, quiz))
+			.collect(Collectors.toList());
 
 		return new QuizResponse(type, level, quizzes);
 	}
@@ -82,13 +61,12 @@ public class QuizService {
 			.orElseThrow(() -> new IllegalArgumentException("User not found"));
 
 		if (request.getIsPassed()) {
-			// StageType 열거형을 문자열로 변환
 			user.clearStage(request.getStageType().name());
 			if (user.hasClearedRegion(request.getRegionId())) {
 				user.completeRegion(request.getRegionId());
 				return "Region completed successfully!";
 			}
-			return "Stage completed successfully. Ready for the next stage.";
+			return "Stage completed successfully.";
 		} else {
 			return "Stage failed. Retry is allowed.";
 		}

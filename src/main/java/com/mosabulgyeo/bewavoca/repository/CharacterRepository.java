@@ -1,7 +1,10 @@
 package com.mosabulgyeo.bewavoca.repository;
 
+import java.util.List;
+
 import com.mosabulgyeo.bewavoca.entity.Character;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * CharacterRepository
@@ -10,4 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Character 엔티티와 매핑된 테이블에 접근하여 CRUD 작업을 수행.
  */
 public interface CharacterRepository extends JpaRepository<Character, Long> {
+	@Query("SELECT c FROM Character c WHERE c.region.id IN :clearedRegionIds")
+	List<Character> findUnlockedCharacters(List<Long> clearedRegionIds);
 }
