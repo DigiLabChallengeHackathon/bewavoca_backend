@@ -2,6 +2,7 @@ package com.mosabulgyeo.bewavoca.service;
 
 import com.mosabulgyeo.bewavoca.dto.CompleteQuizRequest;
 import com.mosabulgyeo.bewavoca.dto.QuizResponse;
+import com.mosabulgyeo.bewavoca.entity.Quiz;
 import com.mosabulgyeo.bewavoca.entity.Region;
 import com.mosabulgyeo.bewavoca.entity.User;
 import com.mosabulgyeo.bewavoca.mapper.QuizResponseMapper;
@@ -42,11 +43,13 @@ public class QuizService {
 		Region region = regionRepository.findByLevel(level)
 			.orElseThrow(() -> new IllegalArgumentException("Region not found"));
 
-		List<?> quizzes = quizRepository.findByRegionIdAndStageType(region.getId(), type).stream()
+		List<Quiz> quizzes = quizRepository.findByRegionIdAndStageType(region.getId(), type);
+
+		List<?> quizResponses = quizzes.stream()
 			.map(quiz -> quizResponseMapper.mapQuizToResponse(type, quiz))
 			.collect(Collectors.toList());
 
-		return new QuizResponse(type, level, quizzes);
+		return new QuizResponse(type, level, quizResponses);
 	}
 
 	/**
