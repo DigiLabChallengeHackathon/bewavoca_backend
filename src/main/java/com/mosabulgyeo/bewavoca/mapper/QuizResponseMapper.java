@@ -23,7 +23,7 @@ public class QuizResponseMapper {
 				return new QuizResponse.OXQuiz(
 					quiz.getId(),
 					quiz.getQuestion(),
-					quiz.isCorrectAnswer(),
+					quiz.getCorrectAnswer(),
 					quiz.getExplanation(),
 					quiz.getVoice()
 				);
@@ -34,7 +34,9 @@ public class QuizResponseMapper {
 				);
 			case "choice":
 				return new QuizResponse.ChoiceQuiz(
-					quiz.getStandard(),
+					quiz.getId().toString(),
+					quiz.getQuestion(),
+					quiz.getOptions().split(","),
 					quiz.getJeju(),
 					quiz.getExplanation(),
 					quiz.getVoice()
