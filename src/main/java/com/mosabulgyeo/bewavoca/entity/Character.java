@@ -43,7 +43,7 @@ public class Character {
 	 * 캐릭터 대사(Dialogue).
 	 * null 허용되지 않음.
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "TEXT")
 	private String dialogue;
 
 	/**
