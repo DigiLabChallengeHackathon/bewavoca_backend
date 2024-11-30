@@ -61,6 +61,13 @@ public class CharacterService {
 	 * @param request 선택 요청 데이터 (기기 ID, 캐릭터 ID 포함)
 	 * @throws IllegalArgumentException 사용자 또는 캐릭터가 존재하지 않거나 캐릭터 잠금 해제가 되지 않았을 경우
 	 */
+	/**
+	 * 캐릭터 선택 기능
+	 * 사용자가 특정 캐릭터를 선택하면 해당 캐릭터를 설정.
+	 *
+	 * @param request 선택 요청 데이터 (기기 ID, 캐릭터 ID 포함)
+	 * @throws IllegalArgumentException 사용자 또는 캐릭터가 존재하지 않을 경우
+	 */
 	@Transactional
 	public void selectCharacter(SelectCharacterRequest request) {
 		User user = userRepository.findByDeviceId(request.getDeviceId())
@@ -68,10 +75,6 @@ public class CharacterService {
 
 		Character character = characterRepository.findById(request.getCharacterId())
 			.orElseThrow(() -> new IllegalArgumentException("Character not found"));
-
-		if (!user.hasClearedRegion(character.getRegion().getId())) {
-			throw new IllegalArgumentException("Region not cleared for the selected character.");
-		}
 
 		user.setSelectedCharacterId(character.getId());
 		userRepository.save(user);
