@@ -39,10 +39,17 @@ public class CharacterService {
 	 */
 	public List<CharacterResponse> getAvailableCharacters(String deviceId) {
 		User user = userRepository.findByDeviceId(deviceId)
-			.orElseThrow(() -> new IllegalArgumentException("User not found"));
+			.orElseThrow(() -> new IllegalArgumentException("User not found for this device."));
 
-		return characterRepository.findAll().stream()
+		List<Character> availableCharacters = characterRepository.findAll().stream()
 			.filter(character -> user.hasClearedRegion(character.getRegion().getId()))
+			.collect(Collectors.toList());
+
+		if (availableCharacters.isEmpty()) {
+			throw new IllegalArgumentException("No available characters for this device.");
+		}
+
+		return availableCharacters.stream()
 			.map(character -> new CharacterResponse(
 				character.getId(),
 				character.getName(),

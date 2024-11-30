@@ -4,6 +4,8 @@ import com.mosabulgyeo.bewavoca.dto.ApiResponse;
 import com.mosabulgyeo.bewavoca.dto.CharacterResponse;
 import com.mosabulgyeo.bewavoca.dto.SelectCharacterRequest;
 import com.mosabulgyeo.bewavoca.service.CharacterService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,15 +44,20 @@ public class CharacterController {
 	 */
 	@GetMapping("/{deviceId}")
 	public ResponseEntity<ApiResponse<List<CharacterResponse>>> getAvailableCharacters(@PathVariable String deviceId) {
-		List<CharacterResponse> characters = characterService.getAvailableCharacters(deviceId);
-		if (characters.isEmpty()) {
-			throw new IllegalArgumentException("No available characters for this device.");
+		try {
+			List<CharacterResponse> characters = characterService.getAvailableCharacters(deviceId);
+			return ResponseEntity.ok(new ApiResponse<>(
+				"success",
+				"Characters retrieved successfully.",
+				characters
+			));
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(
+				"fail",
+				ex.getMessage(),
+				null
+			));
 		}
-		return ResponseEntity.ok(new ApiResponse<>(
-			"success",
-			"Available characters retrieved",
-			characters
-		));
 	}
 
 	/**
