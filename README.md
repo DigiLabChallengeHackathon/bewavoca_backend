@@ -92,27 +92,6 @@
   - 퀴즈 완료 요청 시, 사용자의 진행 상태를 업데이트:
     - 스테이지 완료 여부(`clearedStageTypes`) 및 지역 완료 여부(`completedRegions`)를 `User` 엔티티에서 관리.
 
-**Response 예시**:
-- **퀴즈 데이터 조회**:
-```json
-{
-  "status": "success",
-  "message": "Quiz retrieved successfully",
-  "data": {
-    "type": "ox",
-    "level": 1,
-    "quizzes": [
-      {
-        "oxId": 101,
-        "question": "[바나나]는 제주어로 A다",
-        "correctAnswer": true,
-        "explanation": "바나나는 제주어로 A입니다.",
-        "voice": "link_to_voice_file"
-      }
-    ]
-  }
-}
-
 ---
 
 ### 🎮 게임 모드
