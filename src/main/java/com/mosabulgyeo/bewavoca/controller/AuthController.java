@@ -2,6 +2,7 @@ package com.mosabulgyeo.bewavoca.controller;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +53,12 @@ public class AuthController {
 				new UserResponse(user.get().getId(), user.get().getNickname())
 			));
 		}
-		throw new IllegalArgumentException("User does not exist.");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body(new ApiResponse<>(
+				"fail",
+				"User does not exist",
+				null
+			));
 	}
 
 	/**
@@ -87,7 +93,12 @@ public class AuthController {
 	public ResponseEntity<ApiResponse<UserResponse>> getUserInfo(@PathVariable String deviceId) {
 		User user = authService.getUserByDeviceId(deviceId);
 		if (user == null) {
-			throw new IllegalArgumentException("User not found.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new ApiResponse<>(
+					"fail",
+					"User not found",
+					null
+				));
 		}
 		return ResponseEntity.ok(new ApiResponse<>(
 			"success",
@@ -102,8 +113,20 @@ public class AuthController {
 	 * @return 업데이트된 사용자 정보
 	 */
 	@PatchMapping("/nickname")
-	public ResponseEntity<UserResponse> updateNickname(@RequestBody UpdateNicknameRequest request) {
+	public ResponseEntity<ApiResponse<UserResponse>> updateNickname(@RequestBody @Valid UpdateNicknameRequest request) {
+		if (request.getNewNickname() == null || request.getNewNickname().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new ApiResponse<>(
+					"fail",
+					"Nickname cannot be empty",
+					null
+				));
+		}
 		User updatedUser = authService.updateNickname(request.getDeviceId(), request.getNewNickname());
-		return ResponseEntity.ok(new UserResponse(updatedUser.getId(), updatedUser.getNickname()));
+		return ResponseEntity.ok(new ApiResponse<>(
+			"success",
+			"Nickname updated successfully",
+			new UserResponse(updatedUser.getId(), updatedUser.getNickname())
+		));
 	}
 }
