@@ -4,7 +4,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.mosabulgyeo.bewavoca.entity.Character;
 import com.mosabulgyeo.bewavoca.entity.User;
+import com.mosabulgyeo.bewavoca.repository.CharacterRepository;
 import com.mosabulgyeo.bewavoca.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -16,16 +18,18 @@ import jakarta.transaction.Transactional;
 @Service
 public class AuthService {
 
-	/** 사용자 저장소 의존성 */
 	private final UserRepository userRepository;
+	private final CharacterRepository characterRepository; // CharacterRepository 추가
 
 	/**
 	 * 생성자 의존성 주입
 	 *
 	 * @param userRepository 사용자 정보 저장소
+	 * @param characterRepository 캐릭터 정보 저장소
 	 */
-	public AuthService(UserRepository userRepository) {
+	public AuthService(UserRepository userRepository, CharacterRepository characterRepository) {
 		this.userRepository = userRepository;
+		this.characterRepository = characterRepository;
 	}
 
 	/**
@@ -43,24 +47,32 @@ public class AuthService {
 
 	/**
 	 * 새로운 사용자 등록
-	 *
 	 * 주어진 기기 ID와 닉네임을 사용하여 새로운 사용자 정보를 등록합니다.
-	 * 동일한 기기 ID로 이미 등록된 사용자가 있을 경우 예외를 발생시킵니다.
+	 * 기본 캐릭터(ID 1번)를 자동으로 추가합니다.
 	 *
 	 * @param deviceId 기기 고유 식별자
 	 * @param nickname 사용자 닉네임
 	 * @return 등록된 사용자 객체
 	 * @throws IllegalArgumentException 기기 ID가 이미 등록된 경우 예외 발생
 	 */
+	@Transactional
 	public User registerUser(String deviceId, String nickname) {
 		if (userRepository.findByDeviceId(deviceId).isPresent()) {
 			throw new IllegalArgumentException("Device already registered.");
 		}
 
+		// 기본 캐릭터(ID 1번) 조회
+		Character defaultCharacter = characterRepository.findById(1L)
+			.orElseThrow(() -> new IllegalStateException("Default character (ID 1) not found"));
+
+		// 사용자 생성
 		User newUser = User.builder()
 			.deviceId(deviceId)
 			.nickname(nickname)
 			.build();
+
+		// 기본 캐릭터 설정
+		newUser.setSelectedCharacterId(defaultCharacter.getId());
 
 		return userRepository.save(newUser);
 	}
