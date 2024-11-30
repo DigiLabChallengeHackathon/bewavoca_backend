@@ -18,38 +18,82 @@ public class Quiz {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	/**
+	 * 퀴즈가 속한 지역 (Region)
+	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "region_id", nullable = false)
 	private Region region;
 
+	/**
+	 * 스테이지 유형 (ox, match, choice)
+	 */
 	@Column(nullable = false)
 	private String stageType;
 
+	/**
+	 * 퀴즈 질문
+	 */
 	@Column(nullable = true)
 	private String question;
 
+	/**
+	 * 표준어 (match 유형에 사용)
+	 */
 	@Column(nullable = true)
 	private String standard;
 
+	/**
+	 * 제주어 (정답 또는 매칭 단어)
+	 */
 	@Column(nullable = true)
 	private String jeju;
 
+	/**
+	 * 4지선다 선택지 (쉼표로 구분된 문자열)
+	 * 예: "바나나,사과,키위,포도"
+	 */
+	@Column(nullable = true)
+	private String options;
+
+	/**
+	 * 정답 설명
+	 */
 	@Column(nullable = true)
 	private String explanation;
 
+	/**
+	 * 음성 파일 경로
+	 */
 	@Column(nullable = true)
 	private String voice;
 
+	/**
+	 * OX 유형의 정답 (true: O, false: X)
+	 */
 	@Column(nullable = true)
-	private boolean correctAnswer;
+	private Boolean correctAnswer;
 
+	/**
+	 * Quiz 생성자
+	 * @param region 지역
+	 * @param stageType 스테이지 유형
+	 * @param question 질문
+	 * @param standard 표준어
+	 * @param jeju 제주어 (정답)
+	 * @param options 선택지 (쉼표로 구분된 문자열)
+	 * @param explanation 정답 설명
+	 * @param voice 음성 파일 경로
+	 * @param correctAnswer OX 정답
+	 */
 	public Quiz(Region region, String stageType, String question, String standard, String jeju,
-		String explanation, String voice, boolean correctAnswer) {
+		String options, String explanation, String voice, Boolean correctAnswer) {
 		this.region = region;
 		this.stageType = stageType;
 		this.question = question;
 		this.standard = standard;
 		this.jeju = jeju;
+		this.options = options;
 		this.explanation = explanation;
 		this.voice = voice;
 		this.correctAnswer = correctAnswer;

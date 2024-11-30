@@ -135,14 +135,12 @@ public class QuizResponse {
 		 * 정답 설명.
 		 * 예: "바나나는 제주어로 A입니다."
 		 */
-		@NotBlank(message = "Explanation is required.")
 		private String explanation;
 
 		/**
 		 * 음성 파일 경로.
 		 * 예: "link_to_voice_file"
 		 */
-		@NotBlank(message = "Voice file path is required.")
 		private String voice;
 	}
 }
