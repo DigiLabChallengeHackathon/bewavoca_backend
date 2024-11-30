@@ -47,7 +47,7 @@ public class User {
 	 * 선택되지 않은 경우 null.
 	 */
 	@Column(nullable = true)
-	private Long selectedCharacterId;
+	private Long selectedCharacterId = 1L;
 
 	@ElementCollection
 	@CollectionTable(name = "user_cleared_stages", joinColumns = @JoinColumn(name = "user_id"))
@@ -120,6 +120,7 @@ public class User {
 
 		this.deviceId = deviceId;
 		this.nickname = nickname;
+		this.selectedCharacterId = 1L;
 	}
 
 	/**
