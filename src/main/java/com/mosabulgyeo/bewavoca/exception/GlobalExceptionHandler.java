@@ -23,11 +23,12 @@ public class GlobalExceptionHandler {
 	 */
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
-		return ResponseEntity.badRequest().body(new ApiResponse<>(
-			"error",
-			ex.getMessage(),
-			null
-		));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body(new ApiResponse<>(
+				"fail",
+				ex.getMessage(),
+				null
+			));
 	}
 
 	/**
