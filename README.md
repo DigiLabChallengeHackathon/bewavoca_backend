@@ -28,6 +28,93 @@
 
 ## 주요 기능
 
+### 1. 🌐 사용자 인증 및 회원가입
+
+**기능 설명**  
+- 사용자는 기기 ID를 기반으로 기존 사용자 여부를 확인합니다.  
+- 신규 사용자인 경우 닉네임을 입력하여 회원가입을 진행합니다.  
+- 회원가입 시 기본 캐릭터가 자동으로 설정됩니다.  
+- iOS에서 `UIDevice.identifierForVendor`를 사용하여 고유 기기 ID를 생성합니다.
+
+**iOS 구현 (SwiftUI)**  
+- **SplashView** → **CheckDeviceView**로 전환.  
+- **AuthService**를 활용해 API 호출:
+  - `checkDevice`: 기존 사용자 확인.
+  - `signup`: 신규 사용자 등록.  
+
+**백엔드 구현 (Spring Boot)**  
+- **API 설계**:
+  - `POST /api/auth/check-device`: 사용자 존재 여부 확인.
+  - `POST /api/auth/signup`: 닉네임과 기기 ID를 기반으로 사용자 등록.
+- **서비스 계층**:
+  - 사용자 등록 시 기본 캐릭터(ID: 1) 자동 설정.
+  - 데이터베이스와 연동하여 사용자를 생성하고 상태 관리.
+ 
+---
+
+### 2. 📚 사용자 관리
+
+**기능 설명**  
+- 사용자가 기기 ID를 제공하면, 잠금 해제된 캐릭터 목록을 반환합니다.  
+- 사용자는 캐릭터를 선택하여 정보를 확인하거나 맵 화면으로 돌아갈 수 있습니다.
+
+**iOS 구현 (SwiftUI)**  
+- 캐릭터 선택 화면에 진입 시 서버로부터 잠금 해제된 캐릭터 목록을 가져옵니다.  
+- 선택된 캐릭터의 이름과 대사를 화면에 표시합니다.  
+- 우측 상단의 "X" 버튼을 눌러 맵 화면으로 이동 가능합니다.
+
+**백엔드 구현 (Spring Boot)**  
+- **API 설계**:
+  - `GET /api/character/{deviceId}`: 사용 가능한 캐릭터 목록 조회.
+  - `POST /api/character/select`: 캐릭터 선택 저장.
+  - `GET /api/character/selected/{deviceId}`: 선택된 캐릭터 정보 조회.
+- **기술적 구현**:
+  - 캐릭터의 표정별 외형 데이터를 맵(Map) 형태로 관리.
+  - 사용자의 완료된 지역 정보를 바탕으로 잠금 해제된 캐릭터 목록 필터링.
+  - 데이터베이스에서 캐릭터와 지역 간 관계를 `@ManyToOne`으로 설정.
+ 
+---
+
+### 3. 🎮 퀴즈
+
+**기능 설명**  
+- 사용자는 지역 레벨과 퀴즈 유형(OX, 매칭, 객관식)에 따라 퀴즈를 풉니다.  
+- 퀴즈 완료 여부에 따라 스테이지와 지역의 완료 상태가 업데이트됩니다.
+
+**백엔드 구현 (Spring Boot)**  
+- **API 설계**:
+  - `GET /api/quiz`: 퀴즈 데이터 조회.
+  - `POST /api/quiz/complete`: 퀴즈 완료 처리.
+- **기술적 구현**:
+  - `QuizResponseMapper`를 통해 퀴즈 데이터를 DTO로 매핑:
+    - OX, 매칭, 객관식 퀴즈 유형별 데이터 변환.
+    - 유형별 DTO 서브클래스를 사용해 클라이언트와 데이터 구조 일관성 유지.
+  - 퀴즈 완료 요청 시, 사용자의 진행 상태를 업데이트:
+    - 스테이지 완료 여부(`clearedStageTypes`) 및 지역 완료 여부(`completedRegions`)를 `User` 엔티티에서 관리.
+
+**Response 예시**:
+- **퀴즈 데이터 조회**:
+```json
+{
+  "status": "success",
+  "message": "Quiz retrieved successfully",
+  "data": {
+    "type": "ox",
+    "level": 1,
+    "quizzes": [
+      {
+        "oxId": 101,
+        "question": "[바나나]는 제주어로 A다",
+        "correctAnswer": true,
+        "explanation": "바나나는 제주어로 A입니다.",
+        "voice": "link_to_voice_file"
+      }
+    ]
+  }
+}
+
+---
+
 ### 🎮 게임 모드
 1. **OX 퀴즈**
    - OX 형식으로 간단한 질문을 통해 제주어를 학습합니다.
@@ -48,11 +135,12 @@
 ## 기술 스택
 
 ### 📱 프론트엔드
-- **iOS**: SwiftUI, UIKit
+- **iOS**: SwiftUI, Alomofire
 
 ### 💻 백엔드
 - **Spring Boot**
 - **MySQL**
+- **JPA**
 
 ### 🛠 기타
 - **AWS EC2**: 배포
