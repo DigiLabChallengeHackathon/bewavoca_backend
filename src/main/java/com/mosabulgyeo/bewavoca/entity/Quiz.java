@@ -25,7 +25,7 @@ public class Quiz {
 	@Column(nullable = false)
 	private String stageType;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String question;
 
 	@Column(nullable = true)
@@ -40,7 +40,7 @@ public class Quiz {
 	@Column(nullable = true)
 	private String voice;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private boolean correctAnswer;
 
 	public Quiz(Region region, String stageType, String question, String standard, String jeju,
