@@ -46,19 +46,22 @@ public class AuthController {
 	@PostMapping("/check-device")
 	public ResponseEntity<ApiResponse<UserResponse>> checkDevice(@RequestBody @Valid DeviceRequest request) {
 		Optional<User> user = authService.findUserByDeviceId(request.getDeviceId());
+
 		if (user.isPresent()) {
+			// 사용자가 존재하는 경우 성공 응답 반환
 			return ResponseEntity.ok(new ApiResponse<>(
 				"success",
 				"User exists",
 				new UserResponse(user.get().getId(), user.get().getNickname())
 			));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(new ApiResponse<>(
-				"fail",
-				"User does not exist",
-				null
-			));
+
+		// 사용자가 없는 경우 실패 상태와 함께 데이터가 null인 응답 반환
+		return ResponseEntity.ok(new ApiResponse<>(
+			"fail",
+			"User does not exist",
+			null
+		));
 	}
 
 	/**
