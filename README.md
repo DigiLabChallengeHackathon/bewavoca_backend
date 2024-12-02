@@ -1,12 +1,20 @@
 # Bewavoca(베와보카)
 
-베와보카(Bewavoca)는 Digilab Hackathon에서 개발된 제주어 학습 앱입니다.
+베와보카(Bewavoca)는 DigiLab Hackathon에서 개발된 제주어 학습 앱입니다.
+Bewavoca is a Jeju language learning app developed during the DigiLab Hackathon.
+
+🏆 DigiLab 해커톤 최우수상 수상 | 제주지역혁신플랫폼 지원 선정
+🏆 Grand Prize Winner at DigiLab Hackathon | Supported by Jeju Regional Innovation Platform
+
 사용자들이 재미있는 게임 형식을 통해 제주어를 쉽고 즐겁게 학습할 수 있도록 설계되었습니다.
+The app is designed to help users learn Jeju dialect easily and enjoyably through engaging game formats.
+
 이 앱은 퀴즈 기반의 학습 시스템을 통해 제주어에 대한 이해와 흥미를 높이는 것을 목표로 합니다.
+This app aims to enhance understanding and interest in the Jeju language through quiz-based learning systems.
 
 ---
 
-## 📖 목차
+## 📖 목차 | Table of Contents
 
 - [프로젝트 소개](#프로젝트-소개)
 - [주요 기능](#주요-기능)
