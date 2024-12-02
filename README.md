@@ -16,27 +16,29 @@ This app aims to enhance understanding and interest in the Jeju language through
 
 ## 📖 목차 | Table of Contents
 
-- [프로젝트 소개](#프로젝트-소개)
-- [주요 기능](#주요-기능)
-- [기술 스택](#기술-스택)
-- [라이센스](#License)
-- [Contact](#Contact)
+- [프로젝트 소개](#프로젝트-소개) | Introduction
+- [주요 기능](#주요-기능) | Features
+- [기술 스택](#기술-스택) | Tech Stack
+- [라이센스](#License) | License
+- [Contact](#Contact) | Contact
 
 ---
 
-## 프로젝트 소개
+## 프로젝트 소개 | Introduction
 
-### 🔍 문제
+### 🔍 문제 | Problem
 제주어는 유네스코에서 사라져가는 언어로 지정되었으며, 이를 학습할 수 있는 기회는 매우 제한적입니다. 특히, 현대적인 방식으로 언어를 배우는 도구가 부족합니다.
+Jeju language is designated by UNESCO as a critically endangered language, and learning opportunities are very limited.
 
-### 💡 해결책
+### 💡 해결책 | Solution
 모사불겨는 OX 퀴즈, 매칭 게임, 4지선다형 퀴즈를 통해 제주어를 배우는 앱입니다. 사용자는 다양한 레벨과 지역에 따라 언어를 학습하고 점차적으로 제주어에 익숙해질 수 있습니다.
+In particular, there is a lack of modern tools to facilitate language learning.
 
 ---
 
-## 주요 기능
+## 주요 기능 | Features
 
-### 1. 🌐 사용자 인증 및 회원가입
+### 1. 🌐 사용자 인증 및 회원가입 | User Authentication and Registration
 
 **기능 설명**  
 - 사용자는 기기 ID를 기반으로 기존 사용자 여부를 확인합니다.  
@@ -185,41 +187,59 @@ This app aims to enhance understanding and interest in the Jeju language through
 
 ### 🛠 기타
 - **AWS EC2**:  
-  클라우드 기반의 가상 서버로, 애플리케이션 호스팅 및 배포를 제공합니다.  
+  클라우드 기반의 가상 서버로, 애플리케이션 호스팅 및 배포를 제공합니다.
+  A cloud-based virtual server for hosting and deploying applications.
 
   **효과**:
   - 서버 리소스를 탄력적으로 조정 가능.
   - 다양한 운영 체제를 지원하여 유연한 환경 설정 가능.
   - 글로벌 네트워크를 통해 빠른 서비스 제공.
+  **Benefits**:
+	- Allows flexible scaling of server resources.
+	-	Supports various operating systems for versatile environment configuration.
+	-	Provides fast service delivery through a global network.
 
-- **NGINX**:  
-  고성능 HTTP 서버이자 Reverse Proxy로 사용됩니다. 정적 파일 제공과 동시에 애플리케이션 서버로의 요청을 분배합니다.  
+- **NGINX**:
+  고성능 HTTP 서버이자 Reverse Proxy로 사용됩니다. 정적 파일 제공과 동시에 애플리케이션 서버로의 요청을 분배합니다.
+  A high-performance HTTP server and reverse proxy that serves static files and distributes requests to the application server.
 
   **효과**:
   - 트래픽 부하를 효율적으로 분산하여 서버 성능 최적화.
   - HTTPS 설정을 통해 보안 강화.
   - 캐싱 기능으로 정적 콘텐츠 전송 속도 개선.
+  **Benefits**:
+	•	Efficiently distributes traffic loads, optimizing server performance.
+	•	Enhances security through HTTPS configuration.
+	•	Improves delivery speed of static content with caching functionality.
 
-- **GitHub Actions**:  
-  자동화된 CI/CD 파이프라인을 지원하여 애플리케이션 빌드, 테스트, 배포를 간소화합니다.  
+- **GitHub Actions**:
+  자동화된 CI/CD 파이프라인을 지원하여 애플리케이션 빌드, 테스트, 배포를 간소화합니다.
+  Supports automated CI/CD pipelines to streamline application building, testing, and deployment.
 
   **효과**:
   - 코드 푸시 시 자동으로 테스트 및 빌드 실행.
   - AWS EC2에 애플리케이션 배포 자동화.
   - 지속적인 통합(CI)과 배포(CD)로 개발 속도 및 안정성 향상.
+  **Benefits**:
+	•	Automatically runs tests and builds when code is pushed.
+	•	Automates deployment of applications to AWS EC2.
+	•	Improves development speed and stability with continuous integration (CI) and delivery (CD).
 
 ---
 
 ## License
 
 이 프로젝트는 MIT 라이센스를 따릅니다. 자유롭게 사용하세요!
+This project is licensed under the MIT License.
 
 자세한 내용은 LICENSE 파일을 참고하세요.
+For more details, see the LICENSE file.
 
 ---
 
 ## Contact
 
 프로젝트 관련 문의는 아래 이메일로 연락 부탁드립니다:
+For inquiries about the project, please contact:
 
 📧 andrewkimswe@gmail.com
