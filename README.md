@@ -4,7 +4,7 @@
 Bewavoca is a Jeju language learning app developed during the DigiLab Hackathon.
 
 🏆 DigiLab 해커톤 최우수상 수상 | 제주지역혁신플랫폼 지원 선정
-🏆 Grand Prize Winner at DigiLab Hackathon | Supported by Jeju Regional Innovation Platform
+🏆 Excellence Award Winner at DigiLab Hackathon | Supported by Jeju Regional Innovation Platform
 
 사용자들이 재미있는 게임 형식을 통해 제주어를 쉽고 즐겁게 학습할 수 있도록 설계되었습니다.
 The app is designed to help users learn Jeju dialect easily and enjoyably through engaging game formats.
