@@ -111,6 +111,9 @@ In particular, there is a lack of modern tools to facilitate language learning.
 - RESTful API를 통해 iOS 클라이언트와 통신하며 퀴즈 데이터를 제공합니다.
 - Communicates with the iOS client via RESTful APIs to provide quiz data.
 
+### Challenges
+- 서버가 다운될 떄마다 AWS 인스턴스를 재부팅하는 과정에서 새로운 ip주소를 받게 되어 설정 시간이 많이 소모되었는데 Elastic IP 도입으로 해결하였습니다.
+  
 ---
 
 ## License
