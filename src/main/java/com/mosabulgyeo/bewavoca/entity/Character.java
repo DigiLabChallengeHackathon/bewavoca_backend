@@ -55,39 +55,16 @@ public class Character {
 	private Region region;
 
 	/**
-	 * 캐릭터의 표정(Expression)과 해당 appearance(이미지 경로) 매핑 정보.
-	 * e.g., "happy" -> "happy.png".
-	 * 표정-appearance를 다루는 맵 구조로 저장.
-	 */
-	@ElementCollection
-	@CollectionTable(name = "character_appearances", joinColumns = @JoinColumn(name = "character_id"))
-	@MapKeyColumn(name = "expression")
-	@Column(name = "appearance")
-	private Map<String, String> appearances;
-
-	/**
 	 * 캐릭터 엔티티 생성자.
 	 * @param name 캐릭터 이름
 	 * @param description 캐릭터 설명
 	 * @param dialogue 캐릭터 대화 내용
 	 * @param region 캐릭터가 속한 지역
-	 * @param appearances 캐릭터의 표정과 appearance 매핑 정보
 	 */
-	public Character(String name, String description, String dialogue, Region region, Map<String, String> appearances) {
+	public Character(String name, String description, String dialogue, Region region) {
 		this.name = name;
 		this.description = description;
 		this.dialogue = dialogue;
 		this.region = region;
-		this.appearances = appearances;
-	}
-
-	/**
-	 * 특정 표정에 해당하는 appearance 반환
-	 *
-	 * @param expression 표정 (e.g., "happy", "sad")
-	 * @return 해당 표정에 대한 appearance 경로
-	 */
-	public String getAppearanceByExpression(String expression) {
-		return appearances.getOrDefault(expression, "default.png");
 	}
 }

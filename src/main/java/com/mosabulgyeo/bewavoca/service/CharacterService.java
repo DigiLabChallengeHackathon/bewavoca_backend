@@ -38,17 +38,31 @@ public class CharacterService {
 	 * @throws IllegalArgumentException 사용자가 존재하지 않을 경우
 	 */
 	public List<CharacterResponse> getAvailableCharacters(String deviceId) {
+		// 사용자 확인
 		User user = userRepository.findByDeviceId(deviceId)
-			.orElseThrow(() -> new IllegalArgumentException("User not found"));
+			.orElseThrow(() -> new IllegalArgumentException("User not found for this device."));
 
-		return characterRepository.findAll().stream()
+		// 기본 캐릭터(ID 1번) 조회
+		Character defaultCharacter = characterRepository.findById(1L)
+			.orElseThrow(() -> new IllegalStateException("Default character (ID 1) not found"));
+
+		// 사용자가 클리어한 지역에 따라 잠금 해제된 캐릭터 필터링
+		List<Character> unlockedCharacters = characterRepository.findAll().stream()
 			.filter(character -> user.hasClearedRegion(character.getRegion().getId()))
+			.collect(Collectors.toList());
+
+		// 기본 캐릭터(ID 1번)를 추가
+		if (unlockedCharacters.stream().noneMatch(character -> character.getId().equals(defaultCharacter.getId()))) {
+			unlockedCharacters.add(defaultCharacter);
+		}
+
+		// 캐릭터 리스트를 DTO로 변환하여 반환
+		return unlockedCharacters.stream()
 			.map(character -> new CharacterResponse(
 				character.getId(),
 				character.getName(),
 				character.getDescription(),
 				character.getDialogue(),
-				character.getAppearances(),
 				character.getRegion().getName()
 			))
 			.collect(Collectors.toList());
@@ -100,7 +114,6 @@ public class CharacterService {
 			character.getName(),
 			character.getDescription(),
 			character.getDialogue(),
-			character.getAppearances(),
 			character.getRegion().getName()
 		);
 	}
