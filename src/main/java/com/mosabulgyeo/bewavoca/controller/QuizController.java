@@ -3,6 +3,7 @@ package com.mosabulgyeo.bewavoca.controller;
 import com.mosabulgyeo.bewavoca.dto.ApiResponse;
 import com.mosabulgyeo.bewavoca.dto.CompleteQuizRequest;
 import com.mosabulgyeo.bewavoca.dto.QuizResponse;
+import com.mosabulgyeo.bewavoca.service.AuthService;
 import com.mosabulgyeo.bewavoca.service.QuizService;
 
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,11 @@ import jakarta.validation.Valid;
 public class QuizController {
 
 	private final QuizService quizService;
+	private final AuthService authService;
 
-	public QuizController(QuizService quizService) {
+	public QuizController(QuizService quizService, AuthService authService) {
 		this.quizService = quizService;
+		this.authService = authService;
 	}
 
 	/**
@@ -48,11 +51,19 @@ public class QuizController {
 	 */
 	@PostMapping("/complete")
 	public ResponseEntity<ApiResponse<String>> completeQuiz(@RequestBody @Valid CompleteQuizRequest request) {
-		String message = quizService.completeQuiz(request);
-		return ResponseEntity.ok(new ApiResponse<>(
-			"success",
-			message,
-			null
-		));
+		if (request.isSuccess()) {
+			authService.clearStage(request.getDeviceId(), request.getRegion(), request.getStage());
+			return ResponseEntity.ok(new ApiResponse<>(
+				"success",
+				"Quiz completed successfully and stage cleared.",
+				null
+			));
+		} else {
+			return ResponseEntity.ok(new ApiResponse<>(
+				"success",
+				"Quiz failed. Better luck next time!",
+				null
+			));
+		}
 	}
 }

@@ -38,44 +38,31 @@ public class CharacterService {
 	 * @throws IllegalArgumentException 사용자가 존재하지 않을 경우
 	 */
 	public List<CharacterResponse> getAvailableCharacters(String deviceId) {
-		// 사용자 확인
 		User user = userRepository.findByDeviceId(deviceId)
 			.orElseThrow(() -> new IllegalArgumentException("User not found for this device."));
 
-		// 기본 캐릭터(ID 1번) 조회
 		Character defaultCharacter = characterRepository.findById(1L)
 			.orElseThrow(() -> new IllegalStateException("Default character (ID 1) not found"));
 
-		// 사용자가 클리어한 지역에 따라 잠금 해제된 캐릭터 필터링
 		List<Character> unlockedCharacters = characterRepository.findAll().stream()
-			.filter(character -> user.hasClearedRegion(character.getRegion().getId()))
+			.filter(character -> user.hasClearedRegion(character.getRegion().getId().intValue()))
 			.collect(Collectors.toList());
 
-		// 기본 캐릭터(ID 1번)를 추가
 		if (unlockedCharacters.stream().noneMatch(character -> character.getId().equals(defaultCharacter.getId()))) {
 			unlockedCharacters.add(defaultCharacter);
 		}
 
-		// 캐릭터 리스트를 DTO로 변환하여 반환
 		return unlockedCharacters.stream()
 			.map(character -> new CharacterResponse(
 				character.getId(),
 				character.getName(),
 				character.getDescription(),
 				character.getDialogue(),
-				character.getAppearances(),
 				character.getRegion().getName()
 			))
 			.collect(Collectors.toList());
 	}
 
-	/**
-	 * 캐릭터 선택 기능
-	 * 사용자가 특정 캐릭터를 선택하면 해당 캐릭터를 설정.
-	 *
-	 * @param request 선택 요청 데이터 (기기 ID, 캐릭터 ID 포함)
-	 * @throws IllegalArgumentException 사용자 또는 캐릭터가 존재하지 않거나 캐릭터 잠금 해제가 되지 않았을 경우
-	 */
 	/**
 	 * 캐릭터 선택 기능
 	 * 사용자가 특정 캐릭터를 선택하면 해당 캐릭터를 설정.
@@ -118,7 +105,6 @@ public class CharacterService {
 			character.getName(),
 			character.getDescription(),
 			character.getDialogue(),
-			character.getAppearances(),
 			character.getRegion().getName()
 		);
 	}
