@@ -1,8 +1,7 @@
 package com.mosabulgyeo.bewavoca.repository;
 
-import java.util.List;
-
 import com.mosabulgyeo.bewavoca.entity.Character;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
