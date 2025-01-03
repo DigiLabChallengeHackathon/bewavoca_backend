@@ -80,6 +80,10 @@ public class User {
 			&& clearedStages.contains(region + "-3");
 	}
 
+	public boolean hasClearedRegion(int region) {
+		return clearedRegions.contains(region);
+	}
+
 	/**
 	 * 선택된 캐릭터 ID 업데이트
 	 * @param characterId 선택할 캐릭터 ID

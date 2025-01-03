@@ -61,21 +61,6 @@ public class AuthController {
 	}
 
 	/**
-	 * 스테이지 클리어 처리
-	 * @param request 스테이지 클리어 요청 데이터
-	 * @return 처리 상태 메시지
-	 */
-	@PostMapping("/clear-stage")
-	public ResponseEntity<ApiResponse<Void>> clearStage(@RequestBody @Valid StageClearRequest request) {
-		authService.clearStage(request.getDeviceId(), request.getRegion(), request.getStage());
-		return ResponseEntity.ok(new ApiResponse<>(
-			"success",
-			"Stage cleared successfully",
-			null
-		));
-	}
-
-	/**
 	 * 사용자 진행 상황 조회
 	 * @param deviceId 사용자 기기 ID
 	 * @return 진행 상황 데이터

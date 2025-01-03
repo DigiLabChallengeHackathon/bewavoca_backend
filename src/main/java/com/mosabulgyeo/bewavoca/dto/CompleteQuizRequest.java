@@ -1,35 +1,24 @@
 package com.mosabulgyeo.bewavoca.dto;
 
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 퀴즈 완료 요청 데이터 전송 객체
  */
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class CompleteQuizRequest {
+	@NotBlank(message = "Device ID is required.")
+	private String deviceId;
 
-	@NotNull(message = "User ID is required.")
-	@Min(value = 1, message = "User ID must be a positive number.")
-	private Long userId;
+	@Min(value = 1, message = "Region must be greater than 0.")
+	private int region;
 
-	@NotNull(message = "Region ID is required.")
-	@Min(value = 1, message = "Region ID must be a positive number.")
-	private Long regionId;
+	@Min(value = 1, message = "Stage must be greater than 0.")
+	private int stage;
 
-	@NotNull(message = "Stage type is required.")
-	private StageType stageType;
-
-	@NotNull(message = "Pass/fail result is required.")
-	private Boolean isPassed;
-
-	public enum StageType {
-		OX, MATCH, CHOICE
-	}
+	private boolean isSuccess;
 }
