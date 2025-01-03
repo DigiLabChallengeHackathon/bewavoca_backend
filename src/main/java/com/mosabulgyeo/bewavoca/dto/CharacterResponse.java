@@ -39,6 +39,12 @@ public class CharacterResponse {
 	private String dialogue;
 
 	/**
+	 * 캐릭터 표정에 따른 이미지 경로.
+	 * Key: 표정 (e.g., "happy", "sad"), Value: 이미지 경로.
+	 */
+	private Map<String, String> appearances;
+
+	/**
 	 * 캐릭터가 속한 지역 이름.
 	 * 예: "제주시", "서귀포시".
 	 */

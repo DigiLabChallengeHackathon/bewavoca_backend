@@ -9,96 +9,80 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/**
- * 사용자 엔티티 클래스
- * 애플리케이션에서 사용자 정보를 저장하고 관리하는 도메인 모델
- */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
 	/**
-	 * 사용자 고유 식별자
-	 * 데이터베이스에서 자동 생성되는 기본 키
+	 * 사용자 고유 식별자 (자동 생성되는 기본 키)
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	/**
-	 * 기기 고유 식별자
-	 * 사용자의 디바이스를 고유하게 식별하는 값
-	 * 중복 불가, null 허용 안됨
+	 * 기기 고유 식별자 (유니크, null 불가)
 	 */
 	@Column(nullable = false, unique = true)
-	private String deviceId; // iPad 기기 정보 (고유값)
+	private String deviceId;
 
 	/**
-	 * 사용자 닉네임
-	 * 최대 8자까지 허용, null 불가
+	 * 사용자 닉네임 (최대 5자)
 	 */
-	@Column(nullable = false, length = 8)
-	private String nickname; // 닉네임 (8자 제한)
+	@Column(nullable = false, length = 5)
+	private String nickname;
 
 	/**
-	 * 선택된 캐릭터 ID
-	 * 사용자가 선택한 캐릭터를 나타냅니다.
-	 * 선택되지 않은 경우 null.
+	 * 선택된 캐릭터 ID (null 허용)
 	 */
 	@Column(nullable = true)
-	private Long selectedCharacterId;
-
-	@ElementCollection
-	@CollectionTable(name = "user_cleared_stages", joinColumns = @JoinColumn(name = "user_id"))
-	@Column(name = "stage_type")
-	private Set<String> clearedStageTypes = new HashSet<>();
+	private Long selectedCharacterId = 1L;
 
 	/**
-	 * 클리어한 스테이지 목록
+	 * 사용자가 클리어한 스테이지 목록 ("region-stage" 형태)
 	 */
 	@ElementCollection
-	@CollectionTable(name = "user_completed_regions", joinColumns = @JoinColumn(name = "user_id"))
-	@Column(name = "region_id")
-	private Set<Long> completedRegions = new HashSet<>();
+	@CollectionTable(name = "user_stages", joinColumns = @JoinColumn(name = "user_id"))
+	@Column(name = "stage")
+	private Set<String> clearedStages = new HashSet<>();
 
 	/**
-	 * 특정 미니 스테이지 타입 클리어 여부 확인
-	 *
-	 * @param stageType 확인할 미니 스테이지 타입f
-	 * @return 클리어 여부
+	 * 사용자가 완료한 지역 목록 (지역 번호)
 	 */
-	public boolean hasClearedStage(String stageType) {
-		return clearedStageTypes.contains(stageType);
-	}
+	@ElementCollection
+	@CollectionTable(name = "user_regions", joinColumns = @JoinColumn(name = "user_id"))
+	@Column(name = "region")
+	private Set<Integer> clearedRegions = new HashSet<>();
 
 	/**
-	 * 특정 미니 스테이지 타입을 클리어 처리
-	 *
-	 * @param stageType 클리어한 미니 스테이지 타입
+	 * 스테이지 클리어 처리
+	 * @param region 지역 번호
+	 * @param stage 스테이지 번호
 	 */
-	public void clearStage(String stageType) {
-		this.clearedStageTypes.add(stageType);
+	public void clearStage(int region, int stage) {
+		clearedStages.add(region + "-" + stage);
+
+		// 해당 지역의 모든 스테이지를 클리어한 경우 지역도 클리어로 설정
+		if (hasClearedAllStages(region)) {
+			clearedRegions.add(region);
+		}
 	}
 
 	/**
-	 * 특정 Stage의 모든 미니 스테이지를 완료했는지 확인
+	 * 특정 지역의 모든 스테이지 클리어 여부 확인
+	 * @param region 지역 번호
+	 * @return 모든 스테이지를 클리어했으면 true
 	 */
-	public boolean hasClearedRegion(Long regionId) {
-		return completedRegions.contains(regionId);
-	}
-
-	public void completeRegion(Long regionId) {
-		this.completedRegions.add(regionId);
+	public boolean hasClearedAllStages(int region) {
+		return clearedStages.contains(region + "-1")
+			&& clearedStages.contains(region + "-2")
+			&& clearedStages.contains(region + "-3");
 	}
 
 	/**
-	 * 선택된 캐릭터 ID를 업데이트하는 메서드
-	 *
-	 * 주어진 캐릭터 ID를 사용하여 현재 사용자가 선택한 캐릭터를 설정합니다.
-	 *
+	 * 선택된 캐릭터 ID 업데이트
 	 * @param characterId 선택할 캐릭터 ID
-	 * @throws IllegalArgumentException 유효하지 않은 캐릭터 ID일 경우 예외 발생
 	 */
 	public void setSelectedCharacterId(Long characterId) {
 		if (characterId == null || characterId <= 0) {
@@ -108,8 +92,7 @@ public class User {
 	}
 
 	/**
-	 * 사용자 생성자
-	 *
+	 * User 생성자
 	 * @param deviceId 기기 고유 식별자
 	 * @param nickname 사용자 닉네임
 	 */
@@ -120,39 +103,30 @@ public class User {
 
 		this.deviceId = deviceId;
 		this.nickname = nickname;
+		this.selectedCharacterId = 1L;
 	}
 
 	/**
-	 * 닉네임 업데이트 메서드
-	 * 비즈니스 로직을 포함한 안전한 업데이트
-	 *
-	 * @param newNickname 새로운 닉네임
+	 * 닉네임 유효성 검증
+	 * @param nickname 검증할 닉네임
 	 */
+	private void validateNickname(String nickname) {
+		if (nickname == null || nickname.trim().isEmpty()) {
+			throw new IllegalArgumentException("Nickname cannot be null or empty");
+		}
+		if (nickname.length() > 5) {
+			throw new IllegalArgumentException("Nickname cannot exceed 5 characters");
+		}
+	}
+
 	public void updateNickname(String newNickname) {
 		validateNickname(newNickname);
 		this.nickname = newNickname;
 	}
 
 	/**
-	 * 닉네임 유효성 검증
-	 *
-	 * @param nickname 검증할 닉네임
-	 * @throws IllegalArgumentException 닉네임이 유효하지 않을 경우
-	 */
-	private void validateNickname(String nickname) {
-		if (nickname == null || nickname.trim().isEmpty()) {
-			throw new IllegalArgumentException("Nickname cannot be null or empty");
-		}
-		if (nickname.length() > 8) {
-			throw new IllegalArgumentException("Nickname cannot exceed 8 characters");
-		}
-	}
-
-	/**
 	 * 디바이스 ID 유효성 검증
-	 *
 	 * @param deviceId 검증할 디바이스 ID
-	 * @throws IllegalArgumentException 디바이스 ID가 유효하지 않을 경우
 	 */
 	private void validateDeviceId(String deviceId) {
 		if (deviceId == null || deviceId.trim().isEmpty()) {

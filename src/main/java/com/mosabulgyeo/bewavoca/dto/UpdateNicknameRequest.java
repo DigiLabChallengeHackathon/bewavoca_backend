@@ -26,10 +26,10 @@ public class UpdateNicknameRequest {
 
 	/**
 	 * 새로운 닉네임
-	 * 닉네임은 최대 8자까지 허용하며 필수 입력
+	 * 닉네임은 최대 5자까지 허용하며 필수 입력
 	 */
 	@NotBlank(message = "New nickname is required.")
-	@Size(max = 8, message = "Nickname cannot exceed 8 characters.")
+	@Size(max = 5, message = "Nickname cannot exceed 5 characters.")
 	@Pattern(regexp = "^[a-zA-Z가-힣0-9]*$", message = "Nickname can only contain letters, numbers, and Korean characters.")
 	private String newNickname;
 }
