@@ -18,14 +18,13 @@ public class QuizResponseMapper {
 	 * @return QuizResponse의 적절한 서브 클래스 인스턴스
 	 */
 	public Object mapQuizToResponse(String type, Quiz quiz) {
-		switch (type) {
+		switch (type.toLowerCase()) {
 			case "ox":
 				return new QuizResponse.OXQuiz(
 					quiz.getId(),
 					quiz.getQuestion(),
 					quiz.getCorrectAnswer(),
-					quiz.getExplanation(),
-					quiz.getVoice()
+					quiz.getExplanation()
 				);
 			case "match":
 				return new QuizResponse.MatchQuiz(
@@ -36,10 +35,9 @@ public class QuizResponseMapper {
 				return new QuizResponse.ChoiceQuiz(
 					quiz.getId().toString(),
 					quiz.getQuestion(),
-					quiz.getOptions().split(","),
+					quiz.getOptions(),
 					quiz.getJeju(),
-					quiz.getExplanation(),
-					quiz.getVoice()
+					quiz.getExplanation()
 				);
 			default:
 				throw new IllegalArgumentException("Unsupported quiz type: " + type);

@@ -1,5 +1,7 @@
 package com.mosabulgyeo.bewavoca.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,20 +55,16 @@ public class Quiz {
 	 * 4지선다 선택지 (쉼표로 구분된 문자열)
 	 * 예: "바나나,사과,키위,포도"
 	 */
-	@Column(nullable = true)
-	private String options;
+	@ElementCollection
+	@CollectionTable(name = "quiz_options", joinColumns = @JoinColumn(name = "quiz_id"))
+	@Column(name = "option_value")
+	private List<String> options;
 
 	/**
 	 * 정답 설명
 	 */
 	@Column(nullable = true)
 	private String explanation;
-
-	/**
-	 * 음성 파일 경로
-	 */
-	@Column(nullable = true)
-	private String voice;
 
 	/**
 	 * OX 유형의 정답 (true: O, false: X)
@@ -83,11 +81,10 @@ public class Quiz {
 	 * @param jeju 제주어 (정답)
 	 * @param options 선택지 (쉼표로 구분된 문자열)
 	 * @param explanation 정답 설명
-	 * @param voice 음성 파일 경로
 	 * @param correctAnswer OX 정답
 	 */
 	public Quiz(Region region, String stageType, String question, String standard, String jeju,
-		String options, String explanation, String voice, Boolean correctAnswer) {
+		List<String> options, String explanation, Boolean correctAnswer) {
 		this.region = region;
 		this.stageType = stageType;
 		this.question = question;
@@ -95,7 +92,6 @@ public class Quiz {
 		this.jeju = jeju;
 		this.options = options;
 		this.explanation = explanation;
-		this.voice = voice;
 		this.correctAnswer = correctAnswer;
 	}
 }

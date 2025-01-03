@@ -65,12 +65,6 @@ public class QuizResponse {
 		 */
 		@NotBlank(message = "Explanation is required.")
 		private String explanation;
-
-		/**
-		 * OX 퀴즈의 음성 파일 경로.
-		 */
-		@NotBlank(message = "Voice file path is required.")
-		private String voice;
 	}
 
 	/**
@@ -122,7 +116,7 @@ public class QuizResponse {
 		 * 예: ["바나나", "사과", "키위", "포도"]
 		 */
 		@NotNull(message = "Options are required.")
-		private String[] options;
+		private List<String> options;
 
 		/**
 		 * 정답 제주어 단어.
@@ -136,11 +130,5 @@ public class QuizResponse {
 		 * 예: "바나나는 제주어로 A입니다."
 		 */
 		private String explanation;
-
-		/**
-		 * 음성 파일 경로.
-		 * 예: "link_to_voice_file"
-		 */
-		private String voice;
 	}
 }
