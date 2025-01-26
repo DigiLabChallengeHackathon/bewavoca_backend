@@ -1,7 +1,10 @@
 package com.mosabulgyeo.bewavoca.dto;
 
+import com.mosabulgyeo.bewavoca.enums.ResultStatus;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,5 +23,6 @@ public class CompleteQuizRequest {
 	@Min(value = 1, message = "Stage must be greater than 0.")
 	private int stage;
 
-	private boolean isSuccess;
+	@NotNull(message = "Result status is required.")
+	private ResultStatus resultStatus;
 }

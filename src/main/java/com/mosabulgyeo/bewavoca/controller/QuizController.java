@@ -51,19 +51,29 @@ public class QuizController {
 	 */
 	@PostMapping("/complete")
 	public ResponseEntity<ApiResponse<String>> completeQuiz(@RequestBody @Valid CompleteQuizRequest request) {
-		if (request.isSuccess()) {
-			authService.clearStage(request.getDeviceId(), request.getRegion(), request.getStage());
-			return ResponseEntity.ok(new ApiResponse<>(
-				"success",
-				"Quiz completed successfully and stage cleared.",
-				null
-			));
-		} else {
-			return ResponseEntity.ok(new ApiResponse<>(
-				"success",
-				"Quiz failed. Better luck next time!",
-				null
-			));
+		switch (request.getResultStatus()) {
+			case GREAT_SUCCESS:
+				authService.clearStage(request.getDeviceId(), request.getRegion(), request.getStage());
+				return ResponseEntity.ok(new ApiResponse<>(
+					"success",
+					"Quiz completed successfully with great success! Stage cleared.",
+					null
+				));
+			case SUCCESS:
+				authService.clearStage(request.getDeviceId(), request.getRegion(), request.getStage());
+				return ResponseEntity.ok(new ApiResponse<>(
+					"success",
+					"Quiz completed successfully. Stage cleared.",
+					null
+				));
+			case FAIL:
+				return ResponseEntity.ok(new ApiResponse<>(
+					"fail",
+					"Quiz failed. Better luck next time!",
+					null
+				));
+			default:
+				throw new IllegalArgumentException("Invalid result status: " + request.getResultStatus());
 		}
 	}
 }
