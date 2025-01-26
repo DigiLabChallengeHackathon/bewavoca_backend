@@ -74,20 +74,21 @@ public class QuizResponse {
 	@Data
 	@AllArgsConstructor
 	public static class MatchQuiz {
+		@NotNull(message = "Quiz ID is required.")
+		private Long quizId;
 
-		/**
-		 * 표준어 단어.
-		 * 예: "바나나"
-		 */
-		@NotBlank(message = "Standard word is required.")
-		private String standard;
+		@NotNull(message = "Items are required.")
+		private List<Item> items;
 
-		/**
-		 * 대응되는 제주어 단어.
-		 * 예: "A"
-		 */
-		@NotBlank(message = "Jeju word is required.")
-		private String jeju;
+		@Data
+		@AllArgsConstructor
+		public static class Item {
+			@NotBlank(message = "Standard word is required.")
+			private String standard;
+
+			@NotBlank(message = "Jeju word is required.")
+			private String jeju;
+		}
 	}
 
 	/**

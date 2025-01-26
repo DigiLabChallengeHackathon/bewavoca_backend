@@ -1,5 +1,7 @@
 package com.mosabulgyeo.bewavoca.mapper;
 
+import java.util.stream.Collectors;
+
 import com.mosabulgyeo.bewavoca.dto.QuizResponse;
 import com.mosabulgyeo.bewavoca.entity.Quiz;
 import org.springframework.stereotype.Component;
@@ -27,9 +29,15 @@ public class QuizResponseMapper {
 					quiz.getExplanation()
 				);
 			case "match":
+				var items = quiz.getOptions().stream()
+					.map(option -> new QuizResponse.MatchQuiz.Item(
+						quiz.getStandard(),
+						option
+					))
+					.collect(Collectors.toList());
 				return new QuizResponse.MatchQuiz(
-					quiz.getStandard(),
-					quiz.getJeju()
+					quiz.getId(),
+					items
 				);
 			case "choice":
 				return new QuizResponse.ChoiceQuiz(
