@@ -15,23 +15,33 @@
 
 ## API 명세
 
-### 1. 기기 존재 여부 확인
+### 1. 기기 존재 여부 및 사용자 진행 상황 확인
 **URL**: `/api/auth/check-device`  
 **Method**: `POST`  
 **Request Body**:
 ```json
 {
-  "deviceId": "string"
+  "deviceId": "string",
+  "userid": "string",
+  "nickname": "string",
+  "character": 1,
+  "region": 1,
+  "level": 1
 }
 ```
 **Response**:
 ```json
 {
   "status": "success",
-  "message": "User exists",
+  "message": "User exists and progress retrieved",
   "data": {
-    "userId": 1,
-    "nickname": "string"
+    "userid": 1,
+    "nickname": "string",
+    "character": 1,
+    "region": 1,
+    "level": 1,
+    "clearedStages": ["1-1", "1-2"],
+    "clearedRegions": [1]
   }
 }
 ```
@@ -60,23 +70,7 @@
 ```
 ---
 
-### 3. 사용자 진행 상황 조회
-**URL**: `/api/auth/progress/{deviceId}`  
-**Method**: `GET`  
-**Response**:
-```json
-{
-  "status": "success",
-  "message": "Progress retrieved successfully",
-  "data": {
-    "clearedStages": ["string()"],
-    "clearedRegions": [1, 2]
-  }
-}
-```
----
-
-### 4. 닉네임 업데이트
+### 3. 닉네임 업데이트
 **URL**: `/api/auth/nickname`  
 **Method**: `PATCH`  
 **Request Body**:
@@ -99,7 +93,7 @@
 ```
 ---
 
-### 5. 사용 가능한 캐릭터 목록 조회
+### 4. 사용 가능한 캐릭터 목록 조회
 **URL**: `/api/character/{deviceId}`  
 **Method**: `GET`  
 **Response**:
@@ -120,7 +114,7 @@
 ```
 ---
 
-### 6. 캐릭터 선택
+### 5. 캐릭터 선택
 **URL**: `/api/character/select`  
 **Method**: `POST`  
 **Request Body**:
@@ -140,7 +134,7 @@
 ```
 ---
 
-### 7. 선택된 캐릭터 정보 조회
+### 6. 선택된 캐릭터 정보 조회
 **URL**: `/api/character/selected/{deviceId}`  
 **Method**: `GET`  
 **Response**:
@@ -159,7 +153,7 @@
 ```
 ---
 
-### 8. 퀴즈 데이터 조회
+### 7. 퀴즈 데이터 조회
 **URL**: `/api/quiz`  
 **Method**: `GET`  
 **Query Parameters**:
@@ -180,7 +174,7 @@
 ```
 ---
 
-### 9. 퀴즈 완료 처리
+### 8. 퀴즈 완료 처리
 **URL**: `/api/quiz/complete`  
 **Method**: `POST`  
 **Request Body**:
@@ -200,15 +194,3 @@
   "data": null
 }
 ```
-
-## 실행 방법
-1. **환경 설정**:
-   - `.env` 파일을 생성하고 데이터베이스 정보 및 기타 환경 변수를 설정하세요.
-2. **빌드 및 실행**:
-   ```bash
-   ./gradlew bootRun
-   ```
-
-## 기여 방법
-1. 이슈를 생성하거나 Pull Request를 제출하세요.
-2. 명확한 커밋 메시지와 상세한 설명을 남겨 주세요.
