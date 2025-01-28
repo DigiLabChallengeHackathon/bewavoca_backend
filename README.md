@@ -21,12 +21,7 @@
 **Request Body**:
 ```json
 {
-  "deviceId": "string",
-  "userid": "string",
-  "nickname": "string",
-  "character": 1,
-  "region": 1,
-  "level": 1
+  "deviceId": "string"
 }
 ```
 **Response**:
