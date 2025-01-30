@@ -55,7 +55,6 @@ public class CharacterService {
 			.map(character -> new CharacterResponse(
 				character.getId(),
 				character.getName(),
-				character.getDescription(),
 				character.getDialogue(),
 				character.getRegion().getId() == 999 ? "기본 제공" : character.getRegion().getName()
 			))
@@ -102,7 +101,6 @@ public class CharacterService {
 		return new CharacterResponse(
 			character.getId(),
 			character.getName(),
-			character.getDescription(),
 			character.getDialogue(),
 			character.getRegion().getId() == 999 ? "기본 제공" : character.getRegion().getName()
 		);
