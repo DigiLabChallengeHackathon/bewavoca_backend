@@ -31,13 +31,6 @@ public class Character {
 	private String name;
 
 	/**
-	 * 캐릭터 설명.
-	 * null 허용되지 않음.
-	 */
-	@Column(nullable = false)
-	private String description;
-
-	/**
 	 * 캐릭터 대사(Dialogue).
 	 * null 허용되지 않음.
 	 */
@@ -55,13 +48,11 @@ public class Character {
 	/**
 	 * 캐릭터 엔티티 생성자.
 	 * @param name 캐릭터 이름
-	 * @param description 캐릭터 설명
 	 * @param dialogue 캐릭터 대화 내용
 	 * @param region 캐릭터가 속한 지역
 	 */
-	public Character(String name, String description, String dialogue, Region region) {
+	public Character(String name, String dialogue, Region region) {
 		this.name = name;
-		this.description = description;
 		this.dialogue = dialogue;
 		this.region = region;
 	}
