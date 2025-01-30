@@ -24,7 +24,7 @@ public class User {
 	private String nickname;
 
 	@Column(nullable = true)
-	private Long selectedCharacterId = 1L;
+	private Long selectedCharacterId = 1L;  // 기본값 하르방
 
 	@ElementCollection
 	@CollectionTable(name = "user_stages", joinColumns = @JoinColumn(name = "user_id"))
@@ -61,12 +61,12 @@ public class User {
 	}
 
 	@Builder
-	public User(String deviceId, String nickname) {
+	public User(String deviceId, String nickname, Long selectedCharacterId) {
 		validateDeviceId(deviceId);
 		validateNickname(nickname);
 		this.deviceId = deviceId;
 		this.nickname = nickname;
-		this.selectedCharacterId = 1L;
+		this.selectedCharacterId = selectedCharacterId != null ? selectedCharacterId : 1L;  // 기본값 하르방
 	}
 
 	private void validateNickname(String nickname) {

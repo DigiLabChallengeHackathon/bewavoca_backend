@@ -18,7 +18,7 @@ import lombok.Setter;
 public class UserProgressResponse {
 	private Long userid;
 	private String nickname;
-	private Integer character;
+	private Long character;
 	private Integer region;
 	private Integer level;
 	private Set<String> clearedStages;
