@@ -18,13 +18,6 @@ public class CharacterService {
 	private final CharacterRepository characterRepository;
 	private final UserRepository userRepository;
 
-	/**
-	 * CharacterService 생성자
-	 * 캐릭터와 사용자 저장소 의존성을 주입받아 초기화.
-	 *
-	 * @param characterRepository 캐릭터 데이터 접근 레포지토리
-	 * @param userRepository 사용자 데이터 접근 레포지토리
-	 */
 	public CharacterService(CharacterRepository characterRepository, UserRepository userRepository) {
 		this.characterRepository = characterRepository;
 		this.userRepository = userRepository;
@@ -41,24 +34,30 @@ public class CharacterService {
 		User user = userRepository.findByDeviceId(deviceId)
 			.orElseThrow(() -> new IllegalArgumentException("User not found for this device."));
 
+		// 기본 캐릭터 (region_id = 999) 가져오기
 		Character defaultCharacter = characterRepository.findById(1L)
 			.orElseThrow(() -> new IllegalStateException("Default character (ID 1) not found"));
 
+		// 사용자가 잠금 해제한 캐릭터 목록 가져오기 (기본 캐릭터 제외)
 		List<Character> unlockedCharacters = characterRepository.findAll().stream()
-			.filter(character -> user.hasClearedRegion(character.getRegion().getId().intValue()))
+			.filter(character -> character.getRegion().getId() == 999 || // 기본 캐릭터 항상 포함
+				user.hasClearedRegion(character.getRegion().getId().intValue()) // 해당 지역 클리어 여부 확인
+			)
 			.collect(Collectors.toList());
 
+		// 기본 캐릭터가 목록에 없으면 추가
 		if (unlockedCharacters.stream().noneMatch(character -> character.getId().equals(defaultCharacter.getId()))) {
 			unlockedCharacters.add(defaultCharacter);
 		}
 
+		// 캐릭터 응답 리스트 생성
 		return unlockedCharacters.stream()
 			.map(character -> new CharacterResponse(
 				character.getId(),
 				character.getName(),
 				character.getDescription(),
 				character.getDialogue(),
-				character.getRegion().getName()
+				character.getRegion().getId() == 999 ? "기본 제공" : character.getRegion().getName()
 			))
 			.collect(Collectors.toList());
 	}
@@ -105,7 +104,7 @@ public class CharacterService {
 			character.getName(),
 			character.getDescription(),
 			character.getDialogue(),
-			character.getRegion().getName()
+			character.getRegion().getId() == 999 ? "기본 제공" : character.getRegion().getName()
 		);
 	}
 }
