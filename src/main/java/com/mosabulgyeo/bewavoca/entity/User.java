@@ -24,7 +24,7 @@ public class User {
 	private String nickname;
 
 	@Column(nullable = true)
-	private Long selectedCharacterId = 1L;  // 기본값 하르방
+	private Long selectedCharacterId = 1L;
 
 	@ElementCollection
 	@CollectionTable(name = "user_stages", joinColumns = @JoinColumn(name = "user_id"))
@@ -87,5 +87,16 @@ public class User {
 		if (deviceId == null || deviceId.trim().isEmpty()) {
 			throw new IllegalArgumentException("Device ID cannot be null or empty");
 		}
+	}
+
+	public Integer getCurrentRegion() {
+		return clearedRegions.stream().max(Integer::compareTo).orElse(1);
+	}
+
+	public Integer getCurrentLevel() {
+		return clearedStages.stream()
+			.map(stage -> Integer.parseInt(stage.split("-")[1]))
+			.max(Integer::compareTo)
+			.orElse(1);
 	}
 }
