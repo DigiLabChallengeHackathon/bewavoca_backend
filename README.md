@@ -33,9 +33,7 @@
     "nickname": "string",
     "character": 1,
     "region": 1,
-    "level": 1,
-    "clearedStages": ["1-1", "1-2"],
-    "clearedRegions": [1]
+    "level": 1
   }
 }
 ```
@@ -58,7 +56,10 @@
   "message": "User registered successfully",
   "data": {
     "userId": 1,
-    "nickname": "string"
+    "nickname": "string",
+    "character": 1,
+    "region": 1,
+    "level": 1
   }
 }
 ```
