@@ -21,6 +21,4 @@ public class UserProgressResponse {
 	private Long character;
 	private Integer region;
 	private Integer level;
-	private Set<String> clearedStages;
-	private Set<Integer> clearedRegions;
 }

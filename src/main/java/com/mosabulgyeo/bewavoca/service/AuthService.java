@@ -57,23 +57,12 @@ public class AuthService {
 		User user = userRepository.findByDeviceId(deviceId)
 			.orElseThrow(() -> new IllegalArgumentException("User not found."));
 
-		Integer region = user.getClearedRegions().stream()
-			.max(Integer::compareTo)
-			.orElse(0);
-
-		Integer level = user.getClearedStages().stream()
-			.map(stage -> Integer.parseInt(stage.split("-")[1]))
-			.max(Integer::compareTo)
-			.orElse(0);
-
 		return new UserProgressResponse(
 			user.getId(),
 			user.getNickname(),
 			user.getSelectedCharacterId(),
-			region,
-			level,
-			user.getClearedStages(),
-			user.getClearedRegions()
+			user.getCurrentRegion(),
+			user.getCurrentLevel()
 		);
 	}
 
