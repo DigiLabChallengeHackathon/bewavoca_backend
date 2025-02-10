@@ -61,8 +61,8 @@ public class AuthService {
 			user.getId(),
 			user.getNickname(),
 			user.getSelectedCharacterId(),
-			user.getCurrentRegion(),
-			user.getCurrentLevel()
+			user.getNextRegion(),  // 바뀐 부분
+			user.getNextStage()    // 바뀐 부분
 		);
 	}
 
