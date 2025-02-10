@@ -89,14 +89,67 @@ public class User {
 		}
 	}
 
-	public Integer getCurrentRegion() {
-		return clearedRegions.stream().max(Integer::compareTo).orElse(1);
+	private static final int STAGE_COUNT_PER_REGION = 3;
+
+	/**
+	 * clearedStages에 "1-1", "1-2", "2-1" 등 형태로 저장
+	 * "가장 늦게 깬 (region, stage)"를 찾아 다음 스테이지 계산
+	 */
+	public int getNextRegion() {
+		if (clearedStages.isEmpty()) {
+			// 아무것도 안 깼으면 region=1부터 시작
+			return 1;
+		}
+		int maxRegion = 0;
+		int maxStage = 0;
+		for (String cleared : clearedStages) {
+			String[] parts = cleared.split("-");
+			int r = Integer.parseInt(parts[0]);
+			int s = Integer.parseInt(parts[1]);
+
+			// 지역이 더 큰 게 더 나중, 같으면 스테이지가 더 큰 게 더 나중
+			if (r > maxRegion) {
+				maxRegion = r;
+				maxStage = s;
+			} else if (r == maxRegion && s > maxStage) {
+				maxStage = s;
+			}
+		}
+
+		if (maxStage < STAGE_COUNT_PER_REGION) {
+			// 현재 region에 스테이지 남음 → 지역 그대로
+			return maxRegion;
+		} else {
+			// region을 다 깼으므로 다음 region
+			return maxRegion + 1;
+		}
 	}
 
-	public Integer getCurrentLevel() {
-		return clearedStages.stream()
-			.map(stage -> Integer.parseInt(stage.split("-")[1]))
-			.max(Integer::compareTo)
-			.orElse(1);
+	public int getNextStage() {
+		if (clearedStages.isEmpty()) {
+			// 아무것도 안 깼으면 1-1부터
+			return 1;
+		}
+		int maxRegion = 0;
+		int maxStage = 0;
+		for (String cleared : clearedStages) {
+			String[] parts = cleared.split("-");
+			int r = Integer.parseInt(parts[0]);
+			int s = Integer.parseInt(parts[1]);
+			if (r > maxRegion) {
+				maxRegion = r;
+				maxStage = s;
+			} else if (r == maxRegion && s > maxStage) {
+				maxStage = s;
+			}
+		}
+
+		// 만약 현재 region 아직 다 못 깼으면 → stage+1
+		// 다 깼으면 → 1
+		if (maxStage < STAGE_COUNT_PER_REGION) {
+			return maxStage + 1;
+		} else {
+			return 1; // 다음 region의 첫 스테이지
+		}
 	}
 }
