@@ -3,13 +3,17 @@ package com.mosabulgyeo.bewavoca.controller;
 import com.mosabulgyeo.bewavoca.dto.ApiResponse;
 import com.mosabulgyeo.bewavoca.dto.CompleteQuizRequest;
 import com.mosabulgyeo.bewavoca.dto.QuizResponse;
+import com.mosabulgyeo.bewavoca.entity.User;
 import com.mosabulgyeo.bewavoca.service.AuthService;
 import com.mosabulgyeo.bewavoca.service.QuizService;
+import com.mosabulgyeo.bewavoca.repository.UserRepository;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/quiz")
@@ -17,10 +21,12 @@ public class QuizController {
 
 	private final QuizService quizService;
 	private final AuthService authService;
+	private final UserRepository userRepository;
 
-	public QuizController(QuizService quizService, AuthService authService) {
+	public QuizController(QuizService quizService, AuthService authService, UserRepository userRepository) {
 		this.quizService = quizService;
 		this.authService = authService;
+		this.userRepository = userRepository;
 	}
 
 	/**
@@ -47,25 +53,34 @@ public class QuizController {
 	 * 퀴즈 완료 처리
 	 *
 	 * @param request 퀴즈 완료 요청 데이터
-	 * @return 완료 메시지
+	 * @return 완료 메시지와 다음 스테이지 정보
 	 */
 	@PostMapping("/complete")
-	public ResponseEntity<ApiResponse<String>> completeQuiz(@RequestBody @Valid CompleteQuizRequest request) {
+	public ResponseEntity<ApiResponse<Map<String, Integer>>> completeQuiz(@RequestBody @Valid CompleteQuizRequest request) {
+		User user = userRepository.findByDeviceId(request.getDeviceId())
+			.orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+		// 퀴즈 클리어 처리
 		switch (request.getResultStatus()) {
 			case GREAT_SUCCESS:
-				authService.clearStage(request.getDeviceId(), request.getRegion(), request.getStage());
-				return ResponseEntity.ok(new ApiResponse<>(
-					"success",
-					"Quiz completed successfully with great success! Stage cleared.",
-					null
-				));
 			case SUCCESS:
 				authService.clearStage(request.getDeviceId(), request.getRegion(), request.getStage());
+
+				// 🔥 클리어 후 최신 Progress 가져오기
+				int nextRegion = user.getNextRegion();
+				int nextStage = user.getNextStage();
+
+				// ✅ 반환할 데이터 구성
+				Map<String, Integer> responseData = new HashMap<>();
+				responseData.put("stage", nextStage);
+				responseData.put("region", nextRegion);
+
 				return ResponseEntity.ok(new ApiResponse<>(
 					"success",
 					"Quiz completed successfully. Stage cleared.",
-					null
+					responseData
 				));
+
 			case FAIL:
 				return ResponseEntity.ok(new ApiResponse<>(
 					"fail",
