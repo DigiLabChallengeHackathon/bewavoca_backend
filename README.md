@@ -1,4 +1,4 @@
-# Backend API Documentation
+# Backend API Documentation..
 
 ## 프로젝트 소개
 이 프로젝트는 **베와보카** 애플리케이션의 백엔드입니다. 주요 기능은 다음과 같습니다:
